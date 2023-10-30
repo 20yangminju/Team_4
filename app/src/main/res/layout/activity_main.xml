@@ -61,7 +61,7 @@
             android:background="@drawable/shape_for_circle_button"
             android:gravity="center"
             android:text="RANDOM"
-            android:textColor="#03A9F4"
+            android:textColor="#314BE1"
             tools:textStyle="bold" />
 
         <Switch
