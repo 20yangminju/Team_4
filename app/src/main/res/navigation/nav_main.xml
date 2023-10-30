@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_mainFragment_to_favoriteFragment"
             app:destination="@id/favoriteFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_analysisFragment"
+            app:destination="@id/analysisFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -48,4 +51,9 @@
         android:name="com.example.team_project.MenuFragment"
         android:label="음식점 메뉴 화면"
         tools:layout="@layout/fragment_menu" />
+    <fragment
+        android:id="@+id/analysisFragment"
+        android:name="com.example.team_project.AnalysisFragment"
+        android:label="소비 분석 화면"
+        tools:layout="@layout/fragment_analysis" />
 </navigation>
