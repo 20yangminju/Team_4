@@ -23,8 +23,6 @@ private const val ARG_PARAM2 = "param2"
 class menuFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
-    val menus = arrayOf(
-        Menu ("떡볶이",5000)
     )
 
     private var param1: String? = null
