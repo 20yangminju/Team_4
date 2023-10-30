@@ -45,6 +45,10 @@ class MainFragment : Fragment() {
             // imageButton 버튼이 눌리면 MainFragment -> SettingFragment로 화면 전환
             findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
         }
+        binding?.imageButton2?.setOnClickListener{
+            // i
+            findNavController().navigate(R.id.action_mainFragment_to_favoriteFragment)
+        }
     }
 
     companion object {
