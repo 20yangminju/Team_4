@@ -40,6 +40,7 @@ class AnalysisFragment : Fragment() {
         pieChart = view.findViewById(R.id.pie) // fragment_analysis.xml에서 id가 pie인 view를 가리키는 변수
         setData()
         setColor()
+        setUpData()
     }
 
     fun setData() {
