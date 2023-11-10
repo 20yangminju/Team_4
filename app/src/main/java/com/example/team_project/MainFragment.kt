@@ -49,6 +49,10 @@ class MainFragment : Fragment() {
             // i
             findNavController().navigate(R.id.action_mainFragment_to_favoriteFragment)
         }
+        binding?.imageButton3?.setOnClickListener{
+            findNavController().navigate(R.id.action_mainFragment_to_analysisFragment)
+        }
+
     }
 
     companion object {

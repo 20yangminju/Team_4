@@ -49,6 +49,7 @@
                 android:layout_weight="1"
                 android:contentDescription="단골집"
                 android:src="@android:drawable/btn_star" />
+
         </LinearLayout>
 
         <Button
@@ -70,6 +71,13 @@
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
             android:text="배달 가능" />
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="소비분석화면"
+            android:src="@android:drawable/btn_star" />
 
     </LinearLayout>
 
