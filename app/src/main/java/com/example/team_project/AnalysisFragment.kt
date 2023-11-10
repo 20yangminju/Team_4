@@ -5,55 +5,81 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.team_project.databinding.FragmentAnalysisBinding
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import android.graphics.Color
+import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.utils.ColorTemplate
+import com.github.mikephil.charting.utils.ColorTemplate.COLORFUL_COLORS
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AnalysisFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AnalysisFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var binding: FragmentAnalysisBinding? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    // PieData: 차트에 표시될 데이터 값 객체
+    // PieDataSet: PieData에 대한 스타일 및 속성을 설정하는 객체 (색상, 텍스트 크기, 간격 등)
+    // PieEntry: 차트의 한 부분에 해당하는 데이터를 나타내는 객체 (크기, 라벨 설정)
+    // PieChart: 실제로 화면에 표시되는 PieChart 객체
+
+    private var pieChart: PieChart? = null
+    private var pieEntries = ArrayList<PieEntry>()
+    private var pieDataSet: PieDataSet? = null
+    private var pieData: PieData? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_analysis, container, false)
+        binding = FragmentAnalysisBinding.inflate(inflater)
+        return binding?.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AnalysisFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AnalysisFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        pieChart = view.findViewById(R.id.pie) // fragment_analysis.xml에서 id가 pie인 view를 가리키는 변수
+        setData()
+        setColor()
     }
+
+    fun setData() {
+        pieChart?.setUsePercentValues(true) // 100% 로 맞춰서 계산
+
+        pieEntries.add(PieEntry(30f, "일식"))
+        pieEntries.add(PieEntry(40f, "한식"))
+        pieEntries.add(PieEntry(40f, "중식"))
+        pieEntries.add(PieEntry(60f, "양식"))
+    }
+
+    fun setColor() {
+        val colorsItems = ArrayList<Int>()
+        for (c in ColorTemplate.VORDIPLOM_COLORS) colorsItems.add(c)
+        for (c in ColorTemplate.JOYFUL_COLORS) colorsItems.add(c)
+        for (c in COLORFUL_COLORS) colorsItems.add(c)
+        for (c in ColorTemplate.LIBERTY_COLORS) colorsItems.add(c)
+        for (c in ColorTemplate.PASTEL_COLORS) colorsItems.add(c)
+        colorsItems.add(ColorTemplate.getHoloBlue())
+
+        pieDataSet = PieDataSet(pieEntries, "최근 지출 목록").apply {
+            colors = colorsItems
+            valueTextColor = Color.BLACK
+            valueTextSize = 16f
+        }
+
+        pieDataSet?.colors = listOf(Color.BLUE, Color.GREEN, Color.RED)
+        pieDataSet?.selectionShift
+    }
+    fun setUpData() {
+        pieData = PieData(pieDataSet)
+        binding?.pie?.apply {
+            data = pieData
+            description.isEnabled = false
+            isRotationEnabled = false
+            centerText = "This is Center"
+            setEntryLabelColor(Color.BLACK)
+            animateY(1400, Easing.EaseInOutQuad)
+            animate()
+        }
+    }
+
 }
