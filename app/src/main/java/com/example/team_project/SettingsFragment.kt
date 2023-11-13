@@ -5,40 +5,66 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import com.example.team_project.databinding.FragmentAnalysisBinding
+import com.example.team_project.databinding.FragmentSettingsBinding
+import com.example.team_project.viewmodel.SettingViewModel
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 class SettingsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    val viewModel: SettingViewModel by activityViewModels()
+    private var binding: FragmentSettingsBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+        binding = FragmentSettingsBinding.inflate(inflater)
+        return binding?.root
     }
 
-    companion object {
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SettingsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // viewModel 변화 발생 시, view 갱신
+        viewModel.local.observe(viewLifecycleOwner) {
+            binding?.hwajeonCheckbox?.isChecked = viewModel.isHwa
+            binding?.haengsinCheckbox?.isChecked = viewModel.isHaeng
+            binding?.hongdaeCheckbox?.isChecked = viewModel.isHong
+        }
+        viewModel.food.observe(viewLifecycleOwner) {
+            binding?.koreanFoodCheckbox?.isChecked = viewModel.isKorean
+            binding?.chineseFoodCheckbox?.isChecked = viewModel.isChinese
+            binding?.japaneseFoodCheckbox?.isChecked = viewModel.isJapanese
+            binding?.westernFoodCheckbox?.isChecked = viewModel.isWestern
+        }
+
+        // view 변화 발생 시, viewModel 갱신
+        binding?.hwajeonCheckbox?.setOnClickListener {
+            viewModel.setHwa(binding?.hwajeonCheckbox?.isChecked ?: false)
+        }
+        binding?.haengsinCheckbox?.setOnClickListener {
+            viewModel.setHaeng(binding?.haengsinCheckbox?.isChecked ?: false)
+        }
+        binding?.hongdaeCheckbox?.setOnClickListener {
+            viewModel.setHong(binding?.hongdaeCheckbox?.isChecked ?: false)
+        }
+        binding?.koreanFoodCheckbox?.setOnClickListener {
+            viewModel.setKorean(binding?.koreanFoodCheckbox?.isChecked ?: false)
+        }
+        binding?.chineseFoodCheckbox?.setOnClickListener {
+            viewModel.setChinese(binding?.chineseFoodCheckbox?.isChecked ?: false)
+        }
+        binding?.japaneseFoodCheckbox?.setOnClickListener {
+            viewModel.setJapanese(binding?.japaneseFoodCheckbox?.isChecked ?: false)
+        }
+        binding?.westernFoodCheckbox?.setOnClickListener {
+            viewModel.setWestern(binding?.westernFoodCheckbox?.isChecked ?: false)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }
