@@ -22,7 +22,7 @@ class SettingViewModel : ViewModel() {
     val isKorean get() = _food.value?.get(0) == true
     val isChinese get() = _food.value?.get(1) == true
     val isJapanese get() = _food.value?.get(2) == true
-    val isWestern get() = _food.value?.get(2) == true
+    val isWestern get() = _food.value?.get(3) == true
 
     fun setHwa(newValue: Boolean) {
         _local.value?.let {
