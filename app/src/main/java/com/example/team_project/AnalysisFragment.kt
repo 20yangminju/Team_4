@@ -47,9 +47,9 @@ class AnalysisFragment : Fragment() {
         setUpData()
     }
 
-    // pieChart에 추가할 데이터 설정
+    // pieChart에 추가할 데이터 설정 (추후 변경)
     fun setData() {
-        pieChart?.setUsePercentValues(true) // 100% 로 맞춰서 계산
+        pieChart?.setUsePercentValues(true) // % 로 맞춰서 계산
 
         // pieEntries 배열에 데이터 추가
         pieEntries.add(PieEntry(30f, "일식"))
@@ -63,7 +63,7 @@ class AnalysisFragment : Fragment() {
         // pieChart의 색상(Int형)을 저장하는 ArrayList
         val colorsItems = ArrayList<Int>()
 
-        // pieChart에 사용될 다양한 색상 추가
+        // pieChart에 사용될 다양한 색상 추가 (Template 이용)
         for (c in ColorTemplate.VORDIPLOM_COLORS) colorsItems.add(c)
         for (c in ColorTemplate.JOYFUL_COLORS) colorsItems.add(c)
         for (c in COLORFUL_COLORS) colorsItems.add(c)
@@ -97,6 +97,10 @@ class AnalysisFragment : Fragment() {
             animate()
             // 함수 호출시 에니메이션 시작
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
 }
