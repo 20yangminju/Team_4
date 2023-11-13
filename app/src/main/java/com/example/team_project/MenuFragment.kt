@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.team_project.databinding.FragmentMenuBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,9 +20,16 @@ private const val ARG_PARAM2 = "param2"
  */
 class MenuFragment : Fragment() {
     // TODO: Rename and change types of parameters
+
+    val menus = arrayOf(
+        Menu("something good","9000")
+    )
+
     private var param1: String? = null
     private var param2: String? = null
 
+    private var _binding : FragmentMenuBinding? = null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,7 +43,12 @@ class MenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_menu, container, false)
+        _binding = FragmentMenuBinding.inflate(inflater, container, false)
+        val view = binding.root
+        binding.recMenus.layoutManager = LinearLayoutManager(context)
+        binding.recMenus.adapter = MenusAdapter(menus)
+
+        return view
     }
 
     companion object {
@@ -44,7 +58,7 @@ class MenuFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment MenuFragment.
+         * @return A new instance of fragment menuFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
