@@ -10,9 +10,6 @@ import com.example.team_project.databinding.FragmentAnalysisBinding
 import com.example.team_project.databinding.FragmentSettingsBinding
 import com.example.team_project.viewmodel.SettingViewModel
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 class SettingsFragment : Fragment() {
     val viewModel: SettingViewModel by activityViewModels()
     private var binding: FragmentSettingsBinding? = null

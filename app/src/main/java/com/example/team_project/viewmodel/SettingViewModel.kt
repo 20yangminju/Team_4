@@ -7,11 +7,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class SettingViewModel : ViewModel() {
-    private val _local = MutableLiveData<ArrayList<Boolean>>(arrayListOf(true, true, true))
-    // [화전, 홍대, 행신]
-    private val _food = MutableLiveData<ArrayList<Boolean>>(arrayListOf(true, true, true, true))
-    // [한식, 중식, 일식, 양식]
+    private val _favorite = MutableLiveData(true)
 
+    private val _local = MutableLiveData(arrayListOf(true, true, true))
+    // [화전, 홍대, 행신]
+    private val _food = MutableLiveData(arrayListOf(true, true, true, true))
+    // [한식, 중식, 일식, 양식]
     val local: LiveData<ArrayList<Boolean>> get() = _local
     val food: LiveData<ArrayList<Boolean>> get() = _food
 
