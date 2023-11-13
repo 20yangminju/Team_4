@@ -7,18 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.team_project.databinding.FragmentFavoriteBinding
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import com.google.firebase.Firebase
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.database
 
 
 class FavoriteFragment : Fragment() {
     lateinit var binding: FragmentFavoriteBinding
+    private lateinit var database: DatabaseReference
+
 
 
 
@@ -31,8 +30,7 @@ class FavoriteFragment : Fragment() {
         Favorite_restaurant("쭈꾸미삼겹살", "Korean", "화전")
     )
 
-    val database = Firebase.database
-    val myRef = database.getReference("restorant")
+
 
 
 
@@ -52,30 +50,11 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        myRef.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for(ds in snapshot.children){
-                    val restaurant = snapshot
-                    for(item in restaurant.children){
-                        val id : String = item.key.toString()
-                        val type : String = item.child("info").child("foodtype").value as String
-                        val location : String = item.child("info").child("address").value as String
-
-                        val add = Favorite_restaurant(id, type, location)
-
-                        restaurants += add
-                    }
-
-                }
-            }
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
-
+        database = Firebase.database.reference
         binding = FragmentFavoriteBinding.inflate(layoutInflater)
         binding.recFavorite.layoutManager = LinearLayoutManager(context)
         binding.recFavorite.adapter = FavoriteAdapter(restaurants)
+
         return binding.root
     }
 
