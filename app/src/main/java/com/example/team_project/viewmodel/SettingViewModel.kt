@@ -18,7 +18,7 @@ class SettingViewModel : ViewModel() {
     val local: LiveData<ArrayList<Boolean>> get() = _local
     val food: LiveData<ArrayList<Boolean>> get() = _food
 
-    val isfavor get() = _favorite.value ?: false
+    val isFavor get() = _favorite.value ?: false
 
     val isHwa get() = _local.value?.get(0) == true
     val isHong get() = _local.value?.get(1) == true
