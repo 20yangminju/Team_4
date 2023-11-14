@@ -51,7 +51,15 @@ class RestaurantFragment : Fragment() {
             val restaurantName = it.child("맥도날드").key
             val hours = it.child("맥도날드").child("info").child("hours").value
             val contacts = it.child("맥도날드").child("info").child("contacts").value
+            val del = it.child("맥도날드").child("info").child("delivery").value
+            val addr = it.child("맥도날드").child("info").child("address").value
 
+            if (del==true){
+                binding?.restaurantdel?.text="배달 가능"
+            }
+            else {binding?.restaurantdel?.text="배달 불가능"}
+
+            binding?.restaurantadd?.text=addr.toString()
             binding?.restaurantName?.text=restaurantName.toString()
             binding?.restauranthours?.text=hours.toString()
             binding?.restaurantcon?.text=contacts.toString()

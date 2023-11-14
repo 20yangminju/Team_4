@@ -21,14 +21,7 @@ class FavoriteFragment : Fragment() {
 
 
 
-    var restaurants = arrayOf(
-        Favorite_restaurant("삼호정", "Chinese", "화전"),
-        Favorite_restaurant("부탄츄", "Japanese", "홍대"),
-        Favorite_restaurant("꼬기꼬기", "Korean", "화전"),
-        Favorite_restaurant("로쏘", "western", "홍대"),
-        Favorite_restaurant("막저", "Korean", "행신"),
-        Favorite_restaurant("쭈꾸미삼겹살", "Korean", "화전")
-    )
+    var restaurants = arrayOf<Favorite_restaurant>()
 
 
 

@@ -8,6 +8,20 @@
     tools:context=".RestaurantFragment">
 
     <TextView
+        android:id="@+id/restaurantdel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:text="delivery available?"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/restaurantcon" />
+
+    <TextView
         android:id="@+id/restauranthours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +55,6 @@
         android:id="@+id/restaurantImage"
         android:layout_width="match_parent"
         android:layout_height="380dp"
-        android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
