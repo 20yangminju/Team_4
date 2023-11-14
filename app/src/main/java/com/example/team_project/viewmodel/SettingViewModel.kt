@@ -13,8 +13,12 @@ class SettingViewModel : ViewModel() {
     // [화전, 홍대, 행신]
     private val _food = MutableLiveData(arrayListOf(true, true, true, true))
     // [한식, 중식, 일식, 양식]
+
+    val favorite: LiveData<Boolean> get() = _favorite
     val local: LiveData<ArrayList<Boolean>> get() = _local
     val food: LiveData<ArrayList<Boolean>> get() = _food
+
+    val isFavor get() = _favorite.value ?: false
 
     val isHwa get() = _local.value?.get(0) == true
     val isHong get() = _local.value?.get(1) == true
@@ -25,6 +29,9 @@ class SettingViewModel : ViewModel() {
     val isJapanese get() = _food.value?.get(2) == true
     val isWestern get() = _food.value?.get(3) == true
 
+    fun setFavor(newValue: Boolean) {
+        _favorite.value = newValue
+    }
     fun setHwa(newValue: Boolean) {
         _local.value?.let {
             it[0] = newValue
