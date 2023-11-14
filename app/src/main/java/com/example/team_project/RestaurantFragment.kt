@@ -7,6 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.team_project.databinding.FragmentRestaurantBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,15 +28,10 @@ class RestaurantFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    var binding : FragmentRestaurantBinding? = null
+    private var binding : FragmentRestaurantBinding? = null
+    private lateinit var databaseReference: DatabaseReference
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,8 +39,25 @@ class RestaurantFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentRestaurantBinding.inflate(inflater)
+        readData()
         return binding?.root
     }
+
+
+    fun readData(){
+        databaseReference = FirebaseDatabase.getInstance().getReference("restaurant")
+        databaseReference.get().addOnSuccessListener {
+
+            val restaurantName = it.child("맥도날드").key
+            val hours = it.child("맥도날드").child("info").child("hours").value
+            val contacts = it.child("맥도날드").child("info").child("contacts").value
+
+            binding?.restaurantName?.text=restaurantName.toString()
+            binding?.restauranthours?.text=hours.toString()
+            binding?.restaurantcon?.text=contacts.toString()
+            }
+        }
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

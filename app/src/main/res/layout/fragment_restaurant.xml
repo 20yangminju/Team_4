@@ -7,6 +7,36 @@
     android:layout_height="match_parent"
     tools:context=".RestaurantFragment">
 
+    <TextView
+        android:id="@+id/restauranthours"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:text="hours"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/restaurantadd" />
+
+    <TextView
+        android:id="@+id/restaurantcon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:text="contacts"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/restauranthours" />
+
     <ImageView
         android:id="@+id/restaurantImage"
         android:layout_width="match_parent"
@@ -40,22 +70,19 @@
         app:layout_constraintTop_toTopOf="@+id/restaurantName"
         app:layout_constraintVertical_bias="1.0" />
 
-    <EditText
-        android:id="@+id/restaurantInfo"
+    <TextView
+        android:id="@+id/restaurantadd"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:ems="10"
         android:gravity="start|top"
-        android:inputType="textMultiLine"
-        android:text="address \nhours \ncontacts \ninfo"
+        android:text="address"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/restaurantName"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/restaurantName" />
 
     <Button
         android:id="@+id/menuButton"
@@ -72,4 +99,5 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         tools:background="@drawable/rounded_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
