@@ -40,7 +40,6 @@ class MainFragment : Fragment() {
             // RandomGet 버튼이 눌리면 MainFragment -> RestaurantFragment로 화면 전환
             findNavController().navigate(R.id.action_mainFragment_to_restaurantFragment)
         }
-
         binding?.imageButton?.setOnClickListener {
             // imageButton 버튼이 눌리면 MainFragment -> SettingFragment로 화면 전환
             findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)

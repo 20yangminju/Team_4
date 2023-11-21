@@ -2,6 +2,8 @@ package com.example.team_project
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.team_project.databinding.ListFavoriteBinding
 import com.google.firebase.database.DataSnapshot
@@ -54,6 +56,9 @@ class FavoriteAdapter (private var restaurants : Array<Favorite_restaurant>)
             binding.Name.text = restaurants.name
             binding.typefood.text = restaurants.type.toString()
             binding.location.text = restaurants.where.toString()
+        }
+        init {
+
         }
     }
 }

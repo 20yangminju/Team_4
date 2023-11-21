@@ -11,9 +11,12 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import android.graphics.Color
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.ColorTemplate.COLORFUL_COLORS
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 
 class AnalysisFragment : Fragment() {
     private var binding: FragmentAnalysisBinding? = null
@@ -30,17 +33,28 @@ class AnalysisFragment : Fragment() {
     private var pieDataSet: PieDataSet? = null
     private var pieData: PieData? = null
 
+    val database = Firebase.database.reference
+
+    val recentRestaurants = arrayListOf(
+        RecentRestaurant("등촌 칼국수","korean", "갈비만두", "6,000") , RecentRestaurant("등촌 칼국수","korean", "샤브고기", "10,000")
+    )
+
     // Fragment의 레이아웃 인플레이트 후 반환
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAnalysisBinding.inflate(inflater)
+        binding = FragmentAnalysisBinding.inflate(inflater, container, false)
+
+        // recycler view 설정
+        binding?.recentRestaurants?.layoutManager = LinearLayoutManager(context)
+        binding?.recentRestaurants?.adapter = RecentAdapter(recentRestaurants)
         return binding?.root
+
     }
 
-    // pieChart 설정
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // pieChart 설정
         pieChart = view.findViewById(R.id.pie) // fragment_analysis.xml에서 id가 pie인 view를 가리키는 변수
         setData()
         setColor()
@@ -102,5 +116,4 @@ class AnalysisFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
-
 }
