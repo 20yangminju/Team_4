@@ -29,12 +29,7 @@ class FavoriteFragment : Fragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
-
-
         super.onCreate(savedInstanceState)
-
 }
 
     override fun onCreateView(
@@ -42,11 +37,10 @@ class FavoriteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         database = Firebase.database.reference
         binding = FragmentFavoriteBinding.inflate(layoutInflater)
         binding.recFavorite.layoutManager = LinearLayoutManager(context)
-        binding.recFavorite.adapter = FavoriteAdapter(restaurants)
+        binding.recFavorite.adapter = FavoriteAdapter(restaurants, this)
 
         return binding.root
     }
