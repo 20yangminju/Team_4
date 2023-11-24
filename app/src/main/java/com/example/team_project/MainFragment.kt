@@ -7,6 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.team_project.databinding.FragmentMainBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,6 +24,7 @@ class MainFragment : Fragment() {
     private var param2: String? = null
 
     var binding: FragmentMainBinding? = null
+    private lateinit var databaseReference: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,14 +39,29 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainBinding.inflate(inflater)
+        databaseReference = FirebaseDatabase.getInstance().getReference("restaurant")
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         binding?.RandomGet?.setOnClickListener {
-            // RandomGet 버튼이 눌리면 MainFragment -> RestaurantFragment로 화면 전환
-            findNavController().navigate(R.id.action_mainFragment_to_restaurantFragment)
-        }
+                databaseReference.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot){
+
+                        val keys = snapshot.children.map {it.key}.toList()
+                        val randomKey = keys.random()
+                        val bundle = Bundle()
+                        bundle.putString("key", randomKey)
+                        findNavController().navigate(R.id.action_mainFragment_to_restaurantFragment, bundle)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+                })
+            }
+
         binding?.imageButton?.setOnClickListener {
             // imageButton 버튼이 눌리면 MainFragment -> SettingFragment로 화면 전환
             findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
