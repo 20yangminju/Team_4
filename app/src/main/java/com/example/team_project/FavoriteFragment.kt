@@ -21,7 +21,7 @@ class FavoriteFragment : Fragment() {
 
 
 
-    var restaurants = ArrayList<Favorite_restaurant>()
+    var restaurants = ArrayList <Favorite_restaurant>()
 
 
 

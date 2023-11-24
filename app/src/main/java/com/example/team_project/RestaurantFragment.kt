@@ -39,43 +39,59 @@ class RestaurantFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentRestaurantBinding.inflate(inflater)
-        readData()
+        val receivedBundle = arguments
+        val receivedString = receivedBundle?.getString("key", "맥도날드")
+        readData(receivedString)
         return binding?.root
     }
 
 
-    fun readData(){
-        databaseReference = FirebaseDatabase.getInstance().getReference("restaurant")
-        databaseReference.get().addOnSuccessListener {
+    fun readData(restaurantKey: String?) {
+        if (restaurantKey != null) {
+            databaseReference = FirebaseDatabase.getInstance().getReference("restaurant")
+            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val restaurantInfo = snapshot.child(restaurantKey).child("info")
 
-            val restaurantName = it.child("맥도날드").key
-            val hours = it.child("맥도날드").child("info").child("hours").value
-            val contacts = it.child("맥도날드").child("info").child("contacts").value
-            val del = it.child("맥도날드").child("info").child("delivery").value
-            val addr = it.child("맥도날드").child("info").child("address").value
+                    val restaurantName = restaurantKey
+                    val hours = restaurantInfo.child("hours").value
+                    val contacts = restaurantInfo.child("contacts").value
+                    val del = restaurantInfo.child("delivery").value
+                    val addr = restaurantInfo.child("address").value
 
-            if (del==true){
-                binding?.restaurantdel?.text="배달 가능"
-            }
-            else {binding?.restaurantdel?.text="배달 불가능"}
+                    // 데이터 체크 및 UI 갱신을 메인 스레드에서 수행
+                    binding?.restaurantdel?.post {
+                        if (del is Boolean && del) {
+                            binding?.restaurantdel?.text = "배달 가능"
+                        } else {
+                            binding?.restaurantdel?.text = "배달 불가능"
+                        }
+                    }
 
-            binding?.restaurantadd?.text=addr.toString()
-            binding?.restaurantName?.text=restaurantName.toString()
-            binding?.restauranthours?.text=hours.toString()
-            binding?.restaurantcon?.text=contacts.toString()
-            }
+                    binding?.restaurantadd?.post {
+                        binding?.restaurantadd?.text = addr?.toString() ?: ""
+                    }
+
+                    binding?.restaurantName?.post {
+                        binding?.restaurantName?.text = restaurantName ?: ""
+                    }
+
+                    binding?.restauranthours?.post {
+                        binding?.restauranthours?.text = hours?.toString() ?: ""
+                    }
+
+                    binding?.restaurantcon?.post {
+                        binding?.restaurantcon?.text = contacts?.toString() ?: ""
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // 에러 처리
+                }
+            })
         }
-
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding?.menuButton?.setOnClickListener{
-            findNavController().navigate(R.id.action_restaurantFragment_to_menuFragment)
-        }
-
     }
+
 
 
     companion object {

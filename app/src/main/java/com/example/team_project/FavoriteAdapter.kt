@@ -1,5 +1,6 @@
 package com.example.team_project
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -61,7 +62,10 @@ class FavoriteAdapter(
             binding.location.text = restaurants.where
 
             binding.goToRestaurant.setOnClickListener {
-                fragment.findNavController().navigate(R.id.action_favoriteFragment_to_restaurantFragment)
+                val bundle = Bundle()
+                val myString = restaurants.name
+                bundle.putString("key", myString)
+                fragment.findNavController().navigate(R.id.action_favoriteFragment_to_restaurantFragment, bundle)
             }
         }
     }
