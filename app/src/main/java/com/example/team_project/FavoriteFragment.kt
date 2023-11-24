@@ -17,14 +17,11 @@ import com.google.firebase.database.database
 class FavoriteFragment : Fragment() {
     lateinit var binding: FragmentFavoriteBinding
     private lateinit var database: DatabaseReference
+    private lateinit var favoriteAdapter: FavoriteAdapter
 
 
 
-
-    var restaurants = arrayOf<Favorite_restaurant>()
-
-
-
+    var restaurants = ArrayList<Favorite_restaurant>()
 
 
 
@@ -40,7 +37,9 @@ class FavoriteFragment : Fragment() {
         database = Firebase.database.reference
         binding = FragmentFavoriteBinding.inflate(layoutInflater)
         binding.recFavorite.layoutManager = LinearLayoutManager(context)
-        binding.recFavorite.adapter = FavoriteAdapter(restaurants, this)
+        favoriteAdapter = FavoriteAdapter(restaurants, this)
+        binding.recFavorite.adapter = favoriteAdapter
+
 
         return binding.root
     }
