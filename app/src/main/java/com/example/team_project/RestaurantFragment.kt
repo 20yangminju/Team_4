@@ -8,6 +8,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.team_project.databinding.FragmentRestaurantBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -108,6 +109,7 @@ class RestaurantFragment : Fragment() {
                     val contacts = restaurantInfo.child("contacts").value
                     val del = restaurantInfo.child("delivery").value
                     val addr = restaurantInfo.child("address").value
+                    val URL = "https://firebasestorage.googleapis.com/v0/b/team-4-a91c7.appspot.com/o/${restaurantName}.png?alt=media"
 
                     // 데이터 체크 및 UI 갱신을 메인 스레드에서 수행
                     binding?.restaurantdel?.post {
@@ -117,6 +119,8 @@ class RestaurantFragment : Fragment() {
                             binding?.restaurantdel?.text = "배달 불가능"
                         }
                     }
+
+                    binding?.restaurantImage?.let { Glide.with(it.context).load(URL).into(it) }
 
                     binding?.restaurantadd?.post {
                         binding?.restaurantadd?.text = addr?.toString() ?: ""
