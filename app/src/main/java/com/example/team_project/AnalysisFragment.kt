@@ -16,7 +16,15 @@ import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.ColorTemplate.COLORFUL_COLORS
 import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.google.firebase.database.ktx.values
+import com.google.firebase.database.values
+
+val recentRestaurants = ArrayList<RecentRestaurant>()
+//RecentRestaurant("등촌 칼국수","korean", "갈비만두", "6,000") , RecentRestaurant("등촌 칼국수","korean", "샤브고기", "10,000")
 
 class AnalysisFragment : Fragment() {
     private var binding: FragmentAnalysisBinding? = null
@@ -33,11 +41,8 @@ class AnalysisFragment : Fragment() {
     private var pieDataSet: PieDataSet? = null
     private var pieData: PieData? = null
 
-    val database = Firebase.database.reference
-
-    val recentRestaurants = arrayListOf(
-        RecentRestaurant("등촌 칼국수","korean", "갈비만두", "6,000") , RecentRestaurant("등촌 칼국수","korean", "샤브고기", "10,000")
-    )
+    val database = Firebase.database
+    val typeRef = database.getReference("restaurant")
 
     // Fragment의 레이아웃 인플레이트 후 반환
     override fun onCreateView(
@@ -49,11 +54,28 @@ class AnalysisFragment : Fragment() {
         // recycler view 설정
         binding?.recentRestaurants?.layoutManager = LinearLayoutManager(context)
         binding?.recentRestaurants?.adapter = RecentAdapter(recentRestaurants)
+
         return binding?.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        arguments?.let {
+            val name = it.getString("name").toString()
+            val menu = it.getString("menu").toString()
+            val price = it.getString("price").toString()
+            typeRef.child(name).child("info").child("foodtype").addListenerForSingleValueEvent(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val type = snapshot.value.toString()
+                    recentRestaurants.add(RecentRestaurant(name, type, menu, price))
+                    println(recentRestaurants[0])
+                    binding?.recentRestaurants?.adapter?.notifyDataSetChanged()
+                }
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
+        }
+
         // pieChart 설정
         pieChart = view.findViewById(R.id.pie) // fragment_analysis.xml에서 id가 pie인 view를 가리키는 변수
         setData()
@@ -91,6 +113,7 @@ class AnalysisFragment : Fragment() {
             valueTextSize = 16f // 각 섹션의 Text 크기을 16f로 설정
         }
     }
+
     // 화면에 표시되는 데이터 설정
     fun setUpData() {
         // 설정한 PieDataSet으로 화면에 표시할 PieData 객체 생성

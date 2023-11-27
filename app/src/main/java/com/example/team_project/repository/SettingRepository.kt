@@ -11,9 +11,6 @@ import com.google.firebase.database.getValue
 class SettingRepository {
     val database = Firebase.database
     val ref = database.getReference("설정")
-    val ref_favorite = database.getReference("설정").child("favorite")
-    val ref_food = database.getReference("설정").child("food")
-    val ref_local = database.getReference("설정").child("local")
 
     val foodList = arrayListOf(true, true, true, true)
     val localList = arrayListOf(true, true, true)
@@ -29,6 +26,7 @@ class SettingRepository {
             }
 
         })
+
         // firebase내 food 설정값 변경 적용
         ref.child("food").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -56,6 +54,7 @@ class SettingRepository {
             override fun onCancelled(error: DatabaseError) {
             }
         })
+
         // firebase내 local 설정값 변경 적용
         ref.child("local").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
