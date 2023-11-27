@@ -11,7 +11,10 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import android.graphics.Color
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.team_project.viewmodel.AnalysisViewModel
+import com.example.team_project.viewmodel.SettingViewModel
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.ColorTemplate.COLORFUL_COLORS
@@ -22,9 +25,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.ktx.values
 import com.google.firebase.database.values
-
-val recentRestaurants = ArrayList<RecentRestaurant>()
-//RecentRestaurant("등촌 칼국수","korean", "갈비만두", "6,000") , RecentRestaurant("등촌 칼국수","korean", "샤브고기", "10,000")
 
 class AnalysisFragment : Fragment() {
     private var binding: FragmentAnalysisBinding? = null
@@ -44,6 +44,8 @@ class AnalysisFragment : Fragment() {
     val database = Firebase.database
     val typeRef = database.getReference("restaurant")
 
+    val viewModel: AnalysisViewModel by activityViewModels()
+
     // Fragment의 레이아웃 인플레이트 후 반환
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,13 +55,17 @@ class AnalysisFragment : Fragment() {
 
         // recycler view 설정
         binding?.recentRestaurants?.layoutManager = LinearLayoutManager(context)
-        binding?.recentRestaurants?.adapter = RecentAdapter(recentRestaurants)
+        binding?.recentRestaurants?.adapter = RecentAdapter(viewModel.recent)
 
         return binding?.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel.recent.observe(viewLifecycleOwner) {
+            binding?.recentRestaurants?.adapter = RecentAdapter(viewModel.recent)
+        }
+
         arguments?.let {
             val name = it.getString("name").toString()
             val menu = it.getString("menu").toString()
@@ -67,8 +73,7 @@ class AnalysisFragment : Fragment() {
             typeRef.child(name).child("info").child("foodtype").addListenerForSingleValueEvent(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val type = snapshot.value.toString()
-                    recentRestaurants.add(RecentRestaurant(name, type, menu, price))
-                    println(recentRestaurants[0])
+                    viewModel.setRecent(RecentRestaurant(name, type, menu, price))
                     binding?.recentRestaurants?.adapter?.notifyDataSetChanged()
                 }
                 override fun onCancelled(error: DatabaseError) {
