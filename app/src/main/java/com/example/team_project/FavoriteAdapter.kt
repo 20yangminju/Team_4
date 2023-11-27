@@ -31,7 +31,7 @@ class FavoriteAdapter(
                     val id: String = ds.key.toString()
                     val type: String? = ds.child("info").child("foodtype").value as? String
                     val location: String? = ds.child("info").child("location").value as? String
-                    val URL: String? = ds.child("info").child("imageURL").value as? String
+                    val URL: String? = "https://firebasestorage.googleapis.com/v0/b/team-4-a91c7.appspot.com/o/${id}.png?alt=media"
 
                     val addData =
                         Favorite_restaurant(id, type.orEmpty(), location.orEmpty(), URL.orEmpty())
