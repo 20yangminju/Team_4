@@ -1,9 +1,11 @@
 package com.example.team_project
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.team_project.databinding.FragmentRestaurantBinding
@@ -11,7 +13,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.MutableData
+import com.google.firebase.database.Transaction
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.values
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,12 +29,10 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class RestaurantFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     private var binding : FragmentRestaurantBinding? = null
     private lateinit var databaseReference: DatabaseReference
+    private var receivedString: String? = null
 
 
 
@@ -40,10 +43,52 @@ class RestaurantFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentRestaurantBinding.inflate(inflater)
         val receivedBundle = arguments
-        val receivedString = receivedBundle?.getString("key", "맥도날드")
+        receivedString = receivedBundle?.getString("key", "맥도날드")
         readData(receivedString)
+
         return binding?.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding?.favButton?.setOnClickListener{
+            receivedString?.let{
+                restaurantKey ->
+                val isFavoriteRef = FirebaseDatabase.getInstance().getReference("restaurant").child(restaurantKey).child("isfavorite")
+
+                isFavoriteRef.runTransaction(object : Transaction.Handler{
+                    override fun doTransaction(currentData: MutableData): Transaction.Result {
+                        if (currentData.value == null || !(currentData.value is Boolean))
+                            currentData.value = false
+                        else
+                            currentData.value = !(currentData.value as Boolean)
+                        return Transaction.success(currentData)
+                    }
+
+                    override fun onComplete(
+                        error: DatabaseError?,
+                        committed: Boolean,
+                        currentData: DataSnapshot?
+                    ) {
+                        if (committed){
+                            val isFavorite = currentData?.getValue(Boolean::class.java)
+                            isFavorite?.let {
+                                isFavoriteRef.setValue(it)
+                            }
+                        } else{
+                            error?.toException()?.let {
+                                Log.e("Firebase", "Transaction failed", it)
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
+
+
+
 
 
     fun readData(restaurantKey: String?) {

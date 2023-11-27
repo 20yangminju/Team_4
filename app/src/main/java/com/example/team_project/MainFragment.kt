@@ -48,7 +48,6 @@ class MainFragment : Fragment() {
         binding?.RandomGet?.setOnClickListener {
                 databaseReference.addListenerForSingleValueEvent(object : ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot){
-
                         val keys = snapshot.children.map {it.key}.toList()
                         val randomKey = keys.random()
                         val bundle = Bundle()

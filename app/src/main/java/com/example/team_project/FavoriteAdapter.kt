@@ -6,12 +6,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.team_project.databinding.ListFavoriteBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+
+
 
 class FavoriteAdapter(
     private var restaurants: ArrayList<Favorite_restaurant>,
@@ -24,12 +27,16 @@ class FavoriteAdapter(
         override fun onDataChange(snapshot: DataSnapshot) {
             restaurants.clear() // 기존 데이터를 모두 제거
             for (ds in snapshot.children) {
-                val id: String = ds.key.toString()
-                val type: String? = ds.child("info").child("foodtype").value as? String
-                val location: String? = ds.child("info").child("location").value as? String
+                if(ds.child("isfavorite").value != false ) {
+                    val id: String = ds.key.toString()
+                    val type: String? = ds.child("info").child("foodtype").value as? String
+                    val location: String? = ds.child("info").child("location").value as? String
+                    val URL: String? = ds.child("info").child("imageURL").value as? String
 
-                val addData = Favorite_restaurant(id, type.orEmpty(), location.orEmpty())
-                restaurants.add(addData)
+                    val addData =
+                        Favorite_restaurant(id, type.orEmpty(), location.orEmpty(), URL.orEmpty())
+                    restaurants.add(addData)
+                }
             }
             notifyDataSetChanged()
         }
@@ -60,6 +67,7 @@ class FavoriteAdapter(
             binding.Name.text = restaurants.name
             binding.typefood.text = restaurants.type
             binding.location.text = restaurants.where
+            Glide.with(binding.menuImage.context).load(restaurants.imageUrl).into(binding.menuImage)
 
             binding.goToRestaurant.setOnClickListener {
                 val bundle = Bundle()
