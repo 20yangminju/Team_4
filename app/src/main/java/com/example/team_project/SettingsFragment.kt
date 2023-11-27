@@ -8,17 +8,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.team_project.databinding.FragmentAnalysisBinding
 import com.example.team_project.databinding.FragmentSettingsBinding
+import com.example.team_project.repository.SettingRepository
 import com.example.team_project.viewmodel.SettingViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
+import com.google.firebase.database.values
 
 class SettingsFragment : Fragment() {
     val viewModel: SettingViewModel by activityViewModels()
     private var binding: FragmentSettingsBinding? = null
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
+
         return binding?.root
     }
 

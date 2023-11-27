@@ -29,7 +29,7 @@ class SettingViewModel : ViewModel() {
     // 1 - 0: setHwa, 1 - 1: setHong, 1 - 2: setHaeng
     // 2 - 0: setKorean, 2 - 1: setChinese, 2 - 2: setJapanese 2 - 3: setWestern
 
-    val isFavor get() = _favorite.value ?: false
+    val isFavor get() = _favorite.value == true
 
     val isHwa get() = _local.value?.get(0) == true
     val isHong get() = _local.value?.get(1) == true

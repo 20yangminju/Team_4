@@ -6,52 +6,78 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 
 class SettingRepository {
     val database = Firebase.database
-    val ref = database.getReference("restaurant").child("설정")
+    val ref = database.getReference("설정")
+    val ref_favorite = database.getReference("설정").child("favorite")
+    val ref_food = database.getReference("설정").child("food")
+    val ref_local = database.getReference("설정").child("local")
+
     val foodList = arrayListOf(true, true, true, true)
     val localList = arrayListOf(true, true, true)
-    fun observeSetting(favorite: MutableLiveData<Boolean>, local: MutableLiveData<ArrayList<Boolean>>, food: MutableLiveData<ArrayList<Boolean>>){
-        ref.addValueEventListener(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
 
-                when (snapshot.key) {
-                    "favorite" -> favorite.postValue(snapshot.value as Boolean)
-                    "화전" -> {
-                        localList[0] = snapshot.value as Boolean
-                        local.postValue(localList)
-                    }
-                    "홍대" -> {
-                        localList[1] = snapshot.value as Boolean
-                        local.postValue(localList)
-                    }
-                    "행신" -> {
-                        localList[2] = snapshot.value as Boolean
-                        local.postValue(localList)
-                    }
-                    "한식" -> {
-                        foodList[0] = snapshot.value as Boolean
-                        food.postValue(foodList)
-                    }
-                    "중식" -> {
-                        foodList[1] = snapshot.value as Boolean
-                        food.postValue(foodList)
-                    }
-                    "일식" -> {
-                        foodList[2] = snapshot.value as Boolean
-                        food.postValue(foodList)
-                    }
-                    "양식" -> {
-                        foodList[3] = snapshot.value as Boolean
-                        food.postValue(foodList)
-                    }
-                }
+    fun observeSetting(favorite: MutableLiveData<Boolean>, local: MutableLiveData<ArrayList<Boolean>>, food: MutableLiveData<ArrayList<Boolean>>){
+        // firebase내 favorite 설정값 변경 적용
+        ref.child("favorite").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                favorite.postValue(snapshot.value as Boolean)
             }
 
             override fun onCancelled(error: DatabaseError) {
             }
 
+        })
+        // firebase내 food 설정값 변경 적용
+        ref.child("food").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (ds in snapshot.children) {
+                    when (ds.key.toString()){
+                        "한식" -> {
+                            foodList[0] = ds.value as Boolean
+                            food.postValue(foodList)
+                        }
+                        "중식" -> {
+                            foodList[1] = ds.value as Boolean
+                            food.postValue(foodList)
+                        }
+                        "일식" -> {
+                            foodList[2] = ds.value as Boolean
+                            food.postValue(foodList)
+                        }
+                        "양식" -> {
+                            foodList[3] = ds.value as Boolean
+                            food.postValue(foodList)
+                        }
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+        // firebase내 local 설정값 변경 적용
+        ref.child("local").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (ds in snapshot.children) {
+                    when (ds.key.toString()){
+                        "화전" -> {
+                            localList[0] = ds.value as Boolean
+                            local.postValue(localList)
+                        }
+                        "홍대" -> {
+                            localList[1] = ds.value as Boolean
+                            local.postValue(localList)
+                        }
+                        "행신" -> {
+                            localList[2] = ds.value as Boolean
+                            local.postValue(localList)
+                        }
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
         })
     }
 
