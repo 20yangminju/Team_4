@@ -52,7 +52,7 @@ class MenuFragment : Fragment() {
 
         binding.recMenus.layoutManager = LinearLayoutManager(context)
         readData(receivedString)
-        binding.recMenus.adapter = MenusAdapter(menus)
+        binding.recMenus.adapter = receivedString?.let { MenusAdapter(menus, this, it) }
 
 
         return view
