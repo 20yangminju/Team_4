@@ -16,7 +16,7 @@ class AnalysisRepository {
     val ref = database.getReference("analysis")
 
     fun observeAnalysis(recent: MutableLiveData<ArrayList<RecentRestaurant>>){
-        ref.addValueEventListener(object: ValueEventListener {
+        ref.limitToLast(10).addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val analysisList = ArrayList<RecentRestaurant>()
                 for (ds in snapshot.children) {
@@ -41,14 +41,5 @@ class AnalysisRepository {
         idxRef.child("price").setValue(newValue.price)
         idxRef.child("type").setValue(newValue.type)
         analysisList.add(newValue)
-    }
-
-    fun replaceRecent(newValue: RecentRestaurant, idx: Int){
-        val idxRef = ref.child(idx.toString())
-        idxRef.child("menu").setValue(newValue.menu)
-        idxRef.child("name").setValue(newValue.name)
-        idxRef.child("price").setValue(newValue.price)
-        idxRef.child("type").setValue(newValue.type)
-        analysisList[idx] = newValue
     }
 }

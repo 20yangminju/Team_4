@@ -15,16 +15,6 @@ class AnalysisViewModel : ViewModel() {
     }
 
     fun setRecent(newValue: RecentRestaurant){
-        if (_recent.value?.size ?: 0 < 10) {
-            //_recent.value?.add(newValue)
             repository.addRecent(newValue, _recent.value?.size ?: 0)
-        }
-        else {
-            val idx = (_recent.value?.size ?: 0) % 10
-            _recent.value?.let {
-                it[idx] = newValue
-            }
-            repository.replaceRecent(newValue, idx)
-        }
     }
 }

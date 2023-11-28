@@ -93,10 +93,11 @@ class AnalysisFragment : Fragment() {
         pieChart?.setUsePercentValues(true) // % 로 맞춰서 계산
 
         // pieEntries 배열에 데이터 추가
-        pieEntries.add(PieEntry(30f, "일식"))
-        pieEntries.add(PieEntry(40f, "한식"))
-        pieEntries.add(PieEntry(40f, "중식"))
-        pieEntries.add(PieEntry(60f, "양식"))
+
+        pieEntries.add(PieEntry(2f, "한식"))
+        pieEntries.add(PieEntry(3f, "일식"))
+        pieEntries.add(PieEntry(4f, "중식"))
+        pieEntries.add(PieEntry(1f, "양식"))
     }
 
     // pieChart의 색상 설정
