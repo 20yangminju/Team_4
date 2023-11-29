@@ -62,10 +62,10 @@ class AnalysisFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // pieChart에 추가할 데이터 설정
         viewModel.recent.observe(viewLifecycleOwner) {
             binding?.recentRestaurants?.adapter = RecentAdapter(viewModel.recent)
         }
-
         arguments?.let {
             val name = it.getString("name").toString()
             val menu = it.getString("menu").toString()
@@ -88,16 +88,14 @@ class AnalysisFragment : Fragment() {
         setUpData()
     }
 
-    // pieChart에 추가할 데이터 설정 (추후 변경)
     fun setData() {
         pieChart?.setUsePercentValues(true) // % 로 맞춰서 계산
-
+        viewModel.setGraph()
         // pieEntries 배열에 데이터 추가
-
-        pieEntries.add(PieEntry(2f, "한식"))
-        pieEntries.add(PieEntry(3f, "일식"))
-        pieEntries.add(PieEntry(4f, "중식"))
-        pieEntries.add(PieEntry(1f, "양식"))
+        pieEntries.add(PieEntry(viewModel.koreanPrice, "한식"))
+        pieEntries.add(PieEntry(viewModel.japansePrice, "일식"))
+        pieEntries.add(PieEntry(viewModel.chinesePrice, "중식"))
+        pieEntries.add(PieEntry(viewModel.westernPrice, "양식"))
     }
 
     // pieChart의 색상 설정
