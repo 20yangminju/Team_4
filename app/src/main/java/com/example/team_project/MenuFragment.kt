@@ -66,7 +66,7 @@ class MenuFragment : Fragment() {
                     val menuInfo = snapshot.child(menukey).child("menu")
                     menus.clear()
                     for(ds in menuInfo.children){
-                        val price = ds.value.toString()
+                        val price = ds.child("price").value.toString()
                         val name = ds.key.toString()
                         val addData = Menu(name, price)
                         menus.add(addData)
