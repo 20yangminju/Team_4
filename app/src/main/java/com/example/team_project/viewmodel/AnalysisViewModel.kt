@@ -11,7 +11,7 @@ class AnalysisViewModel : ViewModel() {
     private val _recent = MutableLiveData(ArrayList<RecentRestaurant>())
     private val repository = AnalysisRepository()
 
-    private val _priceList = arrayListOf(0f, 0f ,0f ,0f ,0f) // [total, koreanPrice, chinesePrice, japanesePrice, westernPrice]
+    private val _priceList = arrayListOf(0f, 0f ,0f ,0f ,0f, 0f) // [total, koreanPrice, chinesePrice, japanesePrice, westernPrice, fastPrice]
     val priceList: ArrayList<Float> get() =  _priceList
 
     init {
@@ -31,11 +31,12 @@ class AnalysisViewModel : ViewModel() {
                 "japanese" -> _priceList[3] += curPrice
                 "chinese" -> _priceList[2] += curPrice
                 "western" -> _priceList[4] += curPrice
+                "fastfood" -> _priceList[5] += curPrice
             }
             _priceList[0] += curPrice
         }
         if(_priceList[0] != 0f) {
-            for (i in 1..4) {
+            for (i in 1..5) {
                 _priceList[i] /= _priceList[0]
             }
         }

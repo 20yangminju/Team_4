@@ -41,6 +41,8 @@ class SettingsFragment : Fragment() {
             binding?.chineseFoodCheckbox?.isChecked = viewModel.isChinese
             binding?.japaneseFoodCheckbox?.isChecked = viewModel.isJapanese
             binding?.westernFoodCheckbox?.isChecked = viewModel.isWestern
+            binding?.fastFoodCheckbox?.isChecked = viewModel.isFast
+
         }
 
         // view 변화 발생 시, viewModel 갱신
@@ -68,6 +70,10 @@ class SettingsFragment : Fragment() {
         binding?.westernFoodCheckbox?.setOnClickListener {
             viewModel.setWestern(binding?.westernFoodCheckbox?.isChecked ?: false)
         }
+        binding?.fastFoodCheckbox?.setOnClickListener {
+            viewModel.setFast(binding?.fastFoodCheckbox?.isChecked ?: false)
+        }
+
     }
 
     override fun onDestroyView() {

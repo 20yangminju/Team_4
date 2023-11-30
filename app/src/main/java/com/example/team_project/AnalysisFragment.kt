@@ -40,7 +40,7 @@ class AnalysisFragment : Fragment() {
     private var pieEntries = ArrayList<PieEntry>()
     private var pieDataSet: PieDataSet? = null
     private var pieData: PieData? = null
-    private val label = arrayOf("한식", "중식", "일식", "양식")
+    private val label = arrayOf("한식", "중식", "일식", "양식", "분식")
 
     val database = Firebase.database
     val typeRef = database.getReference("restaurant")
@@ -95,7 +95,7 @@ class AnalysisFragment : Fragment() {
         // pieEntries 배열에 데이터 추가
 
         pieEntries.clear() // 그래프를 비운 후 추가
-        for (i in 1..4) {
+        for (i in 1..5) {
             if (viewModel.priceList[i] != 0f) { // 0이면 그래프에 추가 X
                 pieEntries.add(PieEntry(viewModel.priceList[i], label[i - 1]))
             }

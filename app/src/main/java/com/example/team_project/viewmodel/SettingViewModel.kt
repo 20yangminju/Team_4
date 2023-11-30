@@ -12,8 +12,8 @@ class SettingViewModel : ViewModel() {
 
     private val _local = MutableLiveData(arrayListOf(true, true, true))
     // [화전, 홍대, 행신]
-    private val _food = MutableLiveData(arrayListOf(true, true, true, true))
-    // [한식, 중식, 일식, 양식]
+    private val _food = MutableLiveData(arrayListOf(true, true, true, true, true))
+    // [한식, 중식, 일식, 양식, 분식]
 
     val favorite: LiveData<Boolean> get() = _favorite
     val local: LiveData<ArrayList<Boolean>> get() = _local
@@ -39,6 +39,7 @@ class SettingViewModel : ViewModel() {
     val isChinese get() = _food.value?.get(1) == true
     val isJapanese get() = _food.value?.get(2) == true
     val isWestern get() = _food.value?.get(3) == true
+    val isFast get() = _food.value?.get(4) == true
 
     fun setFavor(newValue: Boolean) {
         _favorite.value = newValue
@@ -85,5 +86,11 @@ class SettingViewModel : ViewModel() {
             it[3] = newValue
         }
         repository.modify(2, 3, newValue)
+    }
+    fun setFast(newValue: Boolean) {
+        _food.value?.let {
+            it[4] = newValue
+        }
+        repository.modify(2, 4, newValue)
     }
 }

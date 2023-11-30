@@ -12,7 +12,7 @@ class SettingRepository {
     val database = Firebase.database
     val ref = database.getReference("설정")
 
-    val foodList = arrayListOf(true, true, true, true)
+    val foodList = arrayListOf(true, true, true, true, true)
     val localList = arrayListOf(true, true, true)
 
     fun observeSetting(favorite: MutableLiveData<Boolean>, local: MutableLiveData<ArrayList<Boolean>>, food: MutableLiveData<ArrayList<Boolean>>){
@@ -46,6 +46,10 @@ class SettingRepository {
                         }
                         "양식" -> {
                             foodList[3] = ds.value as Boolean
+                            food.postValue(foodList)
+                        }
+                        "분식" -> {
+                            foodList[4] = ds.value as Boolean
                             food.postValue(foodList)
                         }
                     }
@@ -115,6 +119,10 @@ class SettingRepository {
                 3 -> {
                     ref.child("food").child("양식").setValue(newValue)
                     foodList[3] = newValue
+                }
+                4 -> {
+                    ref.child("food").child("분식").setValue(newValue)
+                    foodList[4] = newValue
                 }
             }
         }
