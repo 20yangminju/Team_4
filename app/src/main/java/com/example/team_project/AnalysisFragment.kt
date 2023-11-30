@@ -11,7 +11,6 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import android.graphics.Color
-import android.util.Log
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.team_project.viewmodel.AnalysisViewModel
@@ -44,7 +43,7 @@ class AnalysisFragment : Fragment() {
     private val label = arrayOf("한식", "중식", "일식", "양식")
 
     val database = Firebase.database
-    private val ref = database.getReference("restaurant")
+    val typeRef = database.getReference("restaurant")
 
     val viewModel: AnalysisViewModel by activityViewModels()
 
@@ -60,18 +59,24 @@ class AnalysisFragment : Fragment() {
         binding?.recentRestaurants?.adapter = RecentAdapter(viewModel.recent)
 
         return binding?.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // pieChart에 추가할 데이터 설정
         viewModel.recent.observe(viewLifecycleOwner) {
+            pieChart = view.findViewById(R.id.pie) // fragment_analysis.xml에서 id가 pie인 view를 가리키는 변수
+            setData()
+            setColor()
+            setUpData()
+
             binding?.recentRestaurants?.adapter = RecentAdapter(viewModel.recent)
         }
-
         arguments?.let {
             val name = it.getString("name").toString()
             val menu = it.getString("menu").toString()
             val price = it.getString("price").toString()
-            ref.child(name).child("info").child("foodtype").addListenerForSingleValueEvent(object: ValueEventListener {
+            typeRef.child(name).child("info").child("foodtype").addListenerForSingleValueEvent(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val type = snapshot.value.toString()
                     viewModel.setRecent(RecentRestaurant(name, type, menu, price))
@@ -81,25 +86,18 @@ class AnalysisFragment : Fragment() {
                 }
             })
         }
-
         // pieChart 설정
-        pieChart = view?.findViewById(R.id.pie) // fragment_analysis.xml에서 id가 pie인 view를 가리키는 변수
-        setData()
-        setColor()
-        setUpData()
     }
 
-    // pieChart에 추가할 데이터 설정
     fun setData() {
         pieChart?.setUsePercentValues(true) // % 로 맞춰서 계산
+        viewModel.setGraph()
         // pieEntries 배열에 데이터 추가
 
-        val priceList = viewModel.getPriceList()
-        Log.d("LOG1", "${priceList.joinToString()}")
-
+        pieEntries.clear() // 그래프를 비운 후 추가
         for (i in 1..4) {
-            if (priceList[i] != 0f) { // 0이면 그래프에 추가 X
-                pieEntries.add(PieEntry(priceList[i], label[i - 1]))
+            if (viewModel.priceList[i] != 0f) { // 0이면 그래프에 추가 X
+                pieEntries.add(PieEntry(viewModel.priceList[i], label[i - 1]))
             }
         }
     }

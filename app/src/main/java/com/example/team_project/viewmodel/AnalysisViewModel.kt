@@ -11,15 +11,33 @@ class AnalysisViewModel : ViewModel() {
     private val _recent = MutableLiveData(ArrayList<RecentRestaurant>())
     private val repository = AnalysisRepository()
 
+    private val _priceList = arrayListOf(0f, 0f ,0f ,0f ,0f) // [total, koreanPrice, chinesePrice, japanesePrice, westernPrice]
+    val priceList: ArrayList<Float> get() =  _priceList
+
     init {
         repository.observeAnalysis(_recent)
     }
     val recent: LiveData<ArrayList<RecentRestaurant>> get() = _recent
 
     fun setRecent(newValue: RecentRestaurant){
-            repository.addRecent(newValue, _recent.value?.size ?: 0)
+        repository.addRecent(newValue, _recent.value?.size ?: 0)
     }
 
-    fun getPriceList(): ArrayList<Float> = repository.setPrice() // [total, koreanPrice, chinesePrice, japanesePrice, westernPrice]
-
+    fun setGraph() {
+        _recent.value?.forEach { recentRestaurant ->
+            val curPrice = recentRestaurant.price.replace(",", "").toFloatOrNull() ?: 0f
+            when (recentRestaurant.type) {
+                "korean" -> _priceList[1] += curPrice
+                "japanese" -> _priceList[3] += curPrice
+                "chinese" -> _priceList[2] += curPrice
+                "western" -> _priceList[4] += curPrice
+            }
+            _priceList[0] += curPrice
+        }
+        if(_priceList[0] != 0f) {
+            for (i in 1..4) {
+                _priceList[i] /= _priceList[0]
+            }
+        }
+    }
 }
