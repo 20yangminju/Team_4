@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.team_project.viewmodel.AnalysisViewModel
 import com.example.team_project.viewmodel.SettingViewModel
 import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.ColorTemplate.COLORFUL_COLORS
 import com.google.firebase.Firebase
@@ -76,10 +77,11 @@ class AnalysisFragment : Fragment() {
             val name = it.getString("name").toString()
             val menu = it.getString("menu").toString()
             val price = it.getString("price").toString()
-            typeRef.child(name).child("info").child("foodtype").addListenerForSingleValueEvent(object: ValueEventListener {
+            typeRef.child(name).child("info").addListenerForSingleValueEvent(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val type = snapshot.value.toString()
-                    viewModel.setRecent(RecentRestaurant(name, type, menu, price))
+                    val type = snapshot.child("foodtype").value.toString()
+                    val url = "https://firebasestorage.googleapis.com/v0/b/team-4-a91c7.appspot.com/o/${name}.png?alt=media"
+                    viewModel.setRecent(RecentRestaurant(name, type, menu, price, url))
                     binding?.recentRestaurants?.adapter?.notifyDataSetChanged()
                 }
                 override fun onCancelled(error: DatabaseError) {
@@ -126,6 +128,9 @@ class AnalysisFragment : Fragment() {
     fun setUpData() {
         // 설정한 PieDataSet으로 화면에 표시할 PieData 객체 생성
         pieData = PieData(pieDataSet)
+
+        // 퍼센트 포맷터를 사용하여 값 표시 형식 설정
+        pieData?.setValueFormatter(PercentFormatter(pieChart))
 
         // xml 레이아웃 설정
         binding?.pie?.run {

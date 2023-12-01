@@ -24,7 +24,8 @@ class AnalysisRepository {
                     val type = ds.child("type").value.toString()
                     val menu = ds.child("menu").value.toString()
                     val price = ds.child("price").value.toString()
-                    val addData = RecentRestaurant(name, type, menu, price)
+                    val url = ds.child("imageURL").value.toString()
+                    val addData = RecentRestaurant(name, type, menu, price, url)
                     analysisList.add(addData)
                 }
                 recent.postValue(analysisList)
@@ -40,6 +41,7 @@ class AnalysisRepository {
         idxRef.child("name").setValue(newValue.name)
         idxRef.child("price").setValue(newValue.price)
         idxRef.child("type").setValue(newValue.type)
+        idxRef.child("imageURL").setValue(newValue.url)
         analysisList.add(newValue)
     }
 }

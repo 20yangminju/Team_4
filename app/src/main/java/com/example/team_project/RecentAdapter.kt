@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.team_project.databinding.ListMenusBinding
 import com.example.team_project.databinding.ListRecentRestaurantBinding
 
@@ -31,6 +32,7 @@ class RecentAdapter(val recentRestaurants: LiveData<ArrayList<RecentRestaurant>>
             binding.txtNameValue.text = recentRestaurant.name
             binding.txtPriceValue.text = recentRestaurant.price
             binding.txtTypeValue.text = recentRestaurant.type
+            Glide.with(binding.imageView.context).load(recentRestaurant.url).into(binding.imageView)
         }
     }
 }
