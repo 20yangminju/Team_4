@@ -31,6 +31,9 @@ class SettingsFragment : Fragment() {
         viewModel.favorite.observe(viewLifecycleOwner) {
             binding?.favoriteRestaurantSwitch?.isChecked = viewModel.isFavor
         }
+        viewModel.delivery.observe(viewLifecycleOwner) {
+            binding?.deliveryRestaurantSwitch?.isChecked = viewModel.isDelivery
+        }
         viewModel.local.observe(viewLifecycleOwner) {
             binding?.hwajeonCheckbox?.isChecked = viewModel.isHwa
             binding?.haengsinCheckbox?.isChecked = viewModel.isHaeng
@@ -48,6 +51,9 @@ class SettingsFragment : Fragment() {
         // view 변화 발생 시, viewModel 갱신
         binding?.favoriteRestaurantSwitch?.setOnClickListener {
             viewModel.setFavor(binding?.favoriteRestaurantSwitch?.isChecked ?: false)
+        }
+        binding?.deliveryRestaurantSwitch?.setOnClickListener {
+            viewModel.setDelivery(binding?.deliveryRestaurantSwitch?.isChecked ?: false)
         }
         binding?.hwajeonCheckbox?.setOnClickListener {
             viewModel.setHwa(binding?.hwajeonCheckbox?.isChecked ?: false)

@@ -15,11 +15,21 @@ class SettingRepository {
     val foodList = arrayListOf(true, true, true, true, true)
     val localList = arrayListOf(true, true, true)
 
-    fun observeSetting(favorite: MutableLiveData<Boolean>, local: MutableLiveData<ArrayList<Boolean>>, food: MutableLiveData<ArrayList<Boolean>>){
+    fun observeSetting(favorite: MutableLiveData<Boolean>, delivery: MutableLiveData<Boolean>, local: MutableLiveData<ArrayList<Boolean>>, food: MutableLiveData<ArrayList<Boolean>>){
         // firebase내 favorite 설정값 변경 적용
         ref.child("favorite").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 favorite.postValue(snapshot.value as Boolean)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
+
+        ref.child("delivery").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                delivery.postValue(snapshot.value as Boolean)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -87,7 +97,8 @@ class SettingRepository {
     fun modify(setting: Int, index: Int, newValue: Boolean) {
         when(setting) {
             0 -> ref.child("favorite").setValue(newValue)
-            1 -> when(index) {
+            1 -> ref.child("delivery").setValue(newValue)
+            2 -> when(index) {
                 0 -> {
                     ref.child("local").child("화전").setValue(newValue)
                     localList[0] = newValue
@@ -103,7 +114,7 @@ class SettingRepository {
                     localList[2] = newValue
                 }
             }
-            2 -> when(index) {
+            3 -> when(index) {
                 0 -> {
                     ref.child("food").child("한식").setValue(newValue)
                     foodList[0] = newValue
