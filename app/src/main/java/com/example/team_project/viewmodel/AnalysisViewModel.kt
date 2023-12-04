@@ -11,7 +11,8 @@ class AnalysisViewModel : ViewModel() {
     private val _recent = MutableLiveData(ArrayList<RecentRestaurant>())
     private val repository = AnalysisRepository()
 
-    private val _priceList = arrayListOf(0f, 0f ,0f ,0f ,0f, 0f) // [total, koreanPrice, chinesePrice, japanesePrice, westernPrice, fastPrice]
+    // reset을 위해 var 사용
+    private var _priceList = arrayListOf(0f, 0f ,0f ,0f ,0f, 0f) // [total, koreanPrice, chinesePrice, japanesePrice, westernPrice, fastPrice]
     val priceList: ArrayList<Float> get() =  _priceList
 
     init {
@@ -20,7 +21,8 @@ class AnalysisViewModel : ViewModel() {
     val recent: LiveData<ArrayList<RecentRestaurant>> get() = _recent
 
     fun reset() {
-        _recent.value?.clear()
+        _recent.value = ArrayList()
+        _priceList = arrayListOf(0f, 0f ,0f ,0f ,0f, 0f)
         repository.reset()
     }
 

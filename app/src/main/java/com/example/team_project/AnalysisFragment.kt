@@ -102,7 +102,7 @@ class AnalysisFragment : Fragment() {
 
         pieEntries.clear() // 그래프를 비운 후 추가
         for (i in 1..5) {
-            if (viewModel.priceList[i] != 0f) { // 0이면 그래프에 추가 X
+            if (viewModel.priceList[i] != 0.0f) { // 0이면 그래프에 추가 X
                 pieEntries.add(PieEntry(viewModel.priceList[i], label[i - 1]))
             }
         }
