@@ -19,6 +19,11 @@ class AnalysisViewModel : ViewModel() {
     }
     val recent: LiveData<ArrayList<RecentRestaurant>> get() = _recent
 
+    fun reset() {
+        _recent.value?.clear()
+        repository.reset()
+    }
+
     fun setRecent(newValue: RecentRestaurant){
         repository.addRecent(newValue, _recent.value?.size ?: 0)
     }

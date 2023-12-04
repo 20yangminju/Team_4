@@ -88,9 +88,13 @@ class AnalysisFragment : Fragment() {
                 }
             })
         }
-        // pieChart 설정
+        binding?.resetButton?.setOnClickListener {
+            viewModel.reset()
+        }
+
     }
 
+    // pieChart 설정
     fun setData() {
         pieChart?.setUsePercentValues(true) // % 로 맞춰서 계산
         viewModel.setGraph()

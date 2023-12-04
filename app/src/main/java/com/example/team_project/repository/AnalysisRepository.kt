@@ -44,4 +44,10 @@ class AnalysisRepository {
         idxRef.child("imageURL").setValue(newValue.url)
         analysisList.add(newValue)
     }
+
+    fun reset() {
+        ref.removeValue()
+            .addOnSuccessListener {}
+            .addOnCanceledListener {}
+    }
 }
