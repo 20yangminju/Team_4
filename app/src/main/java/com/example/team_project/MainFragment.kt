@@ -68,7 +68,6 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
         }
         binding?.imageButton2?.setOnClickListener{
-            // i
             findNavController().navigate(R.id.action_mainFragment_to_favoriteFragment)
         }
         binding?.imageButton3?.setOnClickListener{

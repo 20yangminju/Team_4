@@ -140,7 +140,7 @@ class AnalysisFragment : Fragment() {
         binding?.pie?.run {
             data = pieData // 차트에 표시될 데이터 설정 (스타일 적용 포함)
             description.isEnabled = false // 차트 설명 추가 속성 (없음)
-            isRotationEnabled = false // 차트를 회전할 수 있는지 나타내는 속성 (사용 X)
+            isRotationEnabled = true // 차트를 회전할 수 있는지 나타내는 속성
             centerText = "최근 소비 지출 내역" // 차트 중앙에 표시될 문장
             setEntryLabelColor(Color.BLACK) // 각 차트의 라벨 텍스트 색상 설정
 

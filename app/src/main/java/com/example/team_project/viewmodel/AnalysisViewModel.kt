@@ -30,9 +30,10 @@ class AnalysisViewModel : ViewModel() {
         repository.addRecent(newValue, _recent.value?.size ?: 0)
     }
 
+    // 변경된 _recent를 이용해 값을 _priceList를 갱신해주는 함수
     fun setGraph() {
         _recent.value?.forEach { recentRestaurant ->
-            val curPrice = recentRestaurant.price.replace(",", "").toFloatOrNull() ?: 0f
+            val curPrice = recentRestaurant.price.replace(",", "").toFloatOrNull() ?: 0f // 가격에 ,가 들어가므로 형식에 맞게 변경
             when (recentRestaurant.type) {
                 "korean" -> _priceList[1] += curPrice
                 "japanese" -> _priceList[3] += curPrice
@@ -42,6 +43,7 @@ class AnalysisViewModel : ViewModel() {
             }
             _priceList[0] += curPrice
         }
+        // 분모가 0이 되는 경우 제외
         if(_priceList[0] != 0f) {
             for (i in 1..5) {
                 _priceList[i] /= _priceList[0]
