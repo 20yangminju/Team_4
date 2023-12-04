@@ -22,8 +22,11 @@ import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
 import java.net.URLEncoder
 
-class MenusAdapter(val menus: ArrayList<Menu>, val fragment: Fragment, val restaurant: String)
-    : RecyclerView.Adapter<MenusAdapter.Holder>() {
+class MenusAdapter(
+    val menus: ArrayList<Menu>,
+    val fragment: Fragment,
+    val restaurant: String
+) : RecyclerView.Adapter<MenusAdapter.Holder>() {
 
     private val database = Firebase.database
     private val myRef = database.getReference("restaurant")
@@ -40,8 +43,13 @@ class MenusAdapter(val menus: ArrayList<Menu>, val fragment: Fragment, val resta
 
     override fun getItemCount() = menus.size
 
-    class Holder(val binding: ListMenusBinding, private val fragment: Fragment, private val restaurant: String, private val storage: FirebaseStorage, private val myRef: DatabaseReference):
-        RecyclerView.ViewHolder(binding.root) {
+    class Holder(
+        val binding: ListMenusBinding,
+        private val fragment: Fragment,
+        private val restaurant: String,
+        private val storage: FirebaseStorage,
+        private val myRef: DatabaseReference
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(menu: Menu) {
             binding.menuName.text = menu.name
             binding.menuPrice.text = menu.price
@@ -52,13 +60,17 @@ class MenusAdapter(val menus: ArrayList<Menu>, val fragment: Fragment, val resta
                     val imageUrl = dataSnapshot.child("imageUrl").getValue(String::class.java)
                     if (imageUrl != null && imageUrl.isNotEmpty()) {
                         Log.d("MenuAdapter", "Image URL: $imageUrl")
-                        Picasso.get()
+
+                        // Load menu image using Glide
+                        Glide.with(binding.menuImage.context)
                             .load(imageUrl)
                             .into(binding.menuImage)
                     } else {
                         Log.e("MenuAdapter", "Image URL not found")
                     }
-                }override fun onCancelled(databaseError: DatabaseError) {
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
                     Log.e("MenuAdapter", "Failed to get image URL", databaseError.toException())
                 }
             })
