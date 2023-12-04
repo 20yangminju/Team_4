@@ -1,6 +1,7 @@
 package com.example.team_project
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -50,6 +51,7 @@ class MainFragment : Fragment() {
                     override fun onDataChange(snapshot: DataSnapshot){
                         val keys = snapshot.children.map {it.key}.toList()
                         val randomKey = keys.random()
+                        Log.d("FirebaseData", "Randomly selected restaurantKey: $randomKey")
                         val bundle = Bundle()
                         bundle.putString("key", randomKey)
                         findNavController().navigate(R.id.action_mainFragment_to_restaurantFragment, bundle)

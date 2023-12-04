@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="favorite_button_selected">#FFC107</color>
+    <color name="favorite_button_unselected">#E0E0E0</color>
 </resources>

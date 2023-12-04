@@ -1,11 +1,8 @@
-package com.example.team_project
-
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -17,47 +14,38 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.MutableData
 import com.google.firebase.database.Transaction
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.values
+import androidx.core.content.ContextCompat
+import com.example.team_project.R
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-
-/**
- * A simple [Fragment] subclass.
- * Use the [RestaurantFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RestaurantFragment : Fragment() {
 
-    private var binding : FragmentRestaurantBinding? = null
+    private var binding: FragmentRestaurantBinding? = null
     private lateinit var databaseReference: DatabaseReference
     private var receivedString: String? = null
-
-
+    private var isFavorite: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentRestaurantBinding.inflate(inflater)
         val receivedBundle = arguments
-        receivedString = receivedBundle?.getString("key", "맥도날드")
+        receivedString = receivedBundle?.getString("key", "default")
         readData(receivedString)
-
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("Lifecycle", "onViewCreated() called")
 
-        binding?.favButton?.setOnClickListener{
-            receivedString?.let{
-                restaurantKey ->
-                val isFavoriteRef = FirebaseDatabase.getInstance().getReference("restaurant").child(restaurantKey).child("isfavorite")
+        binding?.favButton?.setOnClickListener {
+            receivedString?.let { restaurantKey ->
+                val isFavoriteRef =
+                    FirebaseDatabase.getInstance().getReference("restaurant").child(restaurantKey)
+                        .child("isfavorite")
 
-                isFavoriteRef.runTransaction(object : Transaction.Handler{
+                isFavoriteRef.runTransaction(object : Transaction.Handler {
                     override fun doTransaction(currentData: MutableData): Transaction.Result {
                         if (currentData.value == null || !(currentData.value is Boolean))
                             currentData.value = false
@@ -71,12 +59,12 @@ class RestaurantFragment : Fragment() {
                         committed: Boolean,
                         currentData: DataSnapshot?
                     ) {
-                        if (committed){
-                            val isFavorite = currentData?.getValue(Boolean::class.java)
-                            isFavorite?.let {
-                                isFavoriteRef.setValue(it)
-                            }
-                        } else{
+                        if (committed) {
+                            isFavorite = currentData?.getValue(Boolean::class.java) ?: false
+                            isFavoriteRef.setValue(isFavorite)
+                            // isFavorite 값에 따라 버튼 색상 변경
+                            updateFavoriteButtonColor(isFavorite)
+                        } else {
                             error?.toException()?.let {
                                 Log.e("Firebase", "Transaction failed", it)
                             }
@@ -85,7 +73,26 @@ class RestaurantFragment : Fragment() {
                 })
             }
         }
-        binding?.menuButton?.setOnClickListener{
+
+        receivedString?.let { restaurantKey ->
+            val isFavoriteRef =
+                FirebaseDatabase.getInstance().getReference("restaurant").child(restaurantKey)
+                    .child("isfavorite")
+
+            isFavoriteRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    isFavorite = snapshot.getValue(Boolean::class.java) ?: false
+                    Log.d("Firebase", "Fetched isFavorite: $isFavorite")
+                    // isFavorite 값에 따라 버튼 색상 변경
+                    updateFavoriteButtonColor(isFavorite)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // 에러 처리
+                }
+            })
+        }
+        binding?.menuButton?.setOnClickListener {
             val bundle = Bundle()
             val myString = receivedString
             bundle.putString("key", myString)
@@ -93,10 +100,25 @@ class RestaurantFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // 프래그먼트가 다시 화면에 나타날 때 버튼 색상 업데이트
+        updateFavoriteButtonColor(isFavorite)
+    }
 
+    // isFavorite 값에 따라 버튼 색상 변경하는 함수
+    private fun updateFavoriteButtonColor(isFavorite: Boolean) {
+        val button = binding?.favButton
+        button?.post {
+            val colorResId =
+                if (isFavorite) R.color.favorite_button_selected else R.color.favorite_button_unselected
+            val color = ContextCompat.getColor(requireContext(), colorResId)
+            button.setBackgroundColor(color)
+            Log.d("UI Update", "Updated button color. isFavorite: $isFavorite")
+        }
+    }
 
-
-
+    // 데이터를 읽어오는 함수
     fun readData(restaurantKey: String?) {
         if (restaurantKey != null) {
             databaseReference = FirebaseDatabase.getInstance().getReference("restaurant")
@@ -109,9 +131,9 @@ class RestaurantFragment : Fragment() {
                     val contacts = restaurantInfo.child("contacts").value
                     val del = restaurantInfo.child("delivery").value
                     val addr = restaurantInfo.child("address").value
-                    val URL = "https://firebasestorage.googleapis.com/v0/b/team-4-a91c7.appspot.com/o/${restaurantName}.png?alt=media"
+                    val URL =
+                        "https://firebasestorage.googleapis.com/v0/b/team-4-a91c7.appspot.com/o/${restaurantName}.png?alt=media"
 
-                    // 데이터 체크 및 UI 갱신을 메인 스레드에서 수행
                     binding?.restaurantdel?.post {
                         if (del is Boolean && del) {
                             binding?.restaurantdel?.text = "배달 가능"
@@ -145,8 +167,5 @@ class RestaurantFragment : Fragment() {
             })
         }
     }
-
-
-
-
 }
+

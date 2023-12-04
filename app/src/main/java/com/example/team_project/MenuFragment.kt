@@ -48,7 +48,7 @@ class MenuFragment : Fragment() {
         val view = binding.root
 
         val receivedBundle = arguments
-        receivedString = receivedBundle?.getString("key", "양평해장국")
+        receivedString = receivedBundle?.getString("key", "defaultRestaurant")
 
         binding.recMenus.layoutManager = LinearLayoutManager(context)
         readData(receivedString)
@@ -61,25 +61,28 @@ class MenuFragment : Fragment() {
     fun readData(menukey: String?){
         if (menukey != null) {
             databaseReference = FirebaseDatabase.getInstance().getReference("restaurant")
-            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener{
+            databaseReference.child(menukey).child("menu").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val menuInfo = snapshot.child(menukey).child("menu")
                     menus.clear()
-                    for(ds in menuInfo.children){
-                        val price = ds.child("price").value.toString()
+
+                    for (ds in snapshot.children) {
                         val name = ds.key.toString()
-                        val addData = Menu(name, price)
-                        menus.add(addData)
+                        val price = ds.child("price").getValue(String::class.java)
+                        val imageUrl = ds.child("imageUrl").getValue(String::class.java)?:""
+
+                        val menu = Menu(name, price ?: "", imageUrl)
+                        menus.add(menu)
+
                     }
-                    binding.recMenus.adapter?.notifyDataSetChanged()
+
+                    val menusAdapter = MenusAdapter(menus, this@MenuFragment, menukey)
+                    binding.recMenus.adapter = menusAdapter
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }
-            })
-        }
+        })
     }
+}}
 
-
-}
