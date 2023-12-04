@@ -61,9 +61,6 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:4.14.1")
     implementation ("com.google.firebase:firebase-storage-ktx:19.2.1")
     implementation("com.squareup.picasso:picasso:2.8")
-
-
-
 }
 
 

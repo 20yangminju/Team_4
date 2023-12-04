@@ -116,4 +116,5 @@
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/txt_type"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
