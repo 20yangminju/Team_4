@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.team_project.databinding.FragmentMenuBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

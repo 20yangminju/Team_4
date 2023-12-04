@@ -43,13 +43,8 @@ class MenusAdapter(
 
     override fun getItemCount() = menus.size
 
-    class Holder(
-        val binding: ListMenusBinding,
-        private val fragment: Fragment,
-        private val restaurant: String,
-        private val storage: FirebaseStorage,
-        private val myRef: DatabaseReference
-    ) : RecyclerView.ViewHolder(binding.root) {
+    class Holder(val binding: ListMenusBinding, private val fragment: Fragment, private val restaurant: String, private val storage: FirebaseStorage, private val myRef: DatabaseReference):
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(menu: Menu) {
             binding.menuName.text = menu.name
             binding.menuPrice.text = menu.price
@@ -60,17 +55,13 @@ class MenusAdapter(
                     val imageUrl = dataSnapshot.child("imageUrl").getValue(String::class.java)
                     if (imageUrl != null && imageUrl.isNotEmpty()) {
                         Log.d("MenuAdapter", "Image URL: $imageUrl")
-
-                        // Load menu image using Glide
-                        Glide.with(binding.menuImage.context)
+                        Picasso.get()
                             .load(imageUrl)
                             .into(binding.menuImage)
                     } else {
                         Log.e("MenuAdapter", "Image URL not found")
                     }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
+                }override fun onCancelled(databaseError: DatabaseError) {
                     Log.e("MenuAdapter", "Failed to get image URL", databaseError.toException())
                 }
             })
