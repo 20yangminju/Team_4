@@ -1,6 +1,5 @@
 package com.example.team_project.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,16 +8,16 @@ import com.example.team_project.repository.AnalysisRepository
 
 class AnalysisViewModel : ViewModel() {
     private val _recent = MutableLiveData(ArrayList<RecentRestaurant>())
-    private val repository = AnalysisRepository()
+    val recent: LiveData<ArrayList<RecentRestaurant>> get() = _recent
 
-    // reset을 위해 var 사용
+    // 각 인덱스에 가격 정보 저장 (reset을 위해 var 사용)
     private var _priceList = arrayListOf(0f, 0f ,0f ,0f ,0f, 0f) // [total, koreanPrice, chinesePrice, japanesePrice, westernPrice, fastPrice]
     val priceList: ArrayList<Float> get() =  _priceList
 
+    private val repository = AnalysisRepository()
     init {
         repository.observeAnalysis(_recent)
     }
-    val recent: LiveData<ArrayList<RecentRestaurant>> get() = _recent
 
     fun reset() {
         _recent.value = ArrayList()
@@ -41,7 +40,7 @@ class AnalysisViewModel : ViewModel() {
                 "western" -> _priceList[4] += curPrice
                 "fastfood" -> _priceList[5] += curPrice
             }
-            _priceList[0] += curPrice
+            _priceList[0] += curPrice // 총 소비 가격 계산
         }
         // 분모가 0이 되는 경우 제외
         if(_priceList[0] != 0f) {

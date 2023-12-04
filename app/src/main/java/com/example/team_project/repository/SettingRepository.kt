@@ -6,17 +6,16 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import com.google.firebase.database.getValue
 
 class SettingRepository {
-    val database = Firebase.database
-    val ref = database.getReference("설정")
+    private val ref = Firebase.database.getReference("설정")
 
+    // firebase 값을 저장할 배열 (post를 위해)
     val foodList = arrayListOf(true, true, true, true, true)
     val localList = arrayListOf(true, true, true)
 
+    // firebase의 변화 발생 시 viewModel의 Livedata 갱신
     fun observeSetting(favorite: MutableLiveData<Boolean>, delivery: MutableLiveData<Boolean>, local: MutableLiveData<ArrayList<Boolean>>, food: MutableLiveData<ArrayList<Boolean>>){
-        // firebase내 favorite 설정값 변경 적용
         ref.child("favorite").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 favorite.postValue(snapshot.value as Boolean)
@@ -37,29 +36,28 @@ class SettingRepository {
 
         })
 
-        // firebase내 food 설정값 변경 적용
         ref.child("food").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for (ds in snapshot.children) {
-                    when (ds.key.toString()){
+                snapshot.children.forEach { dataSnapshot ->
+                    when (dataSnapshot.key.toString()) {
                         "한식" -> {
-                            foodList[0] = ds.value as Boolean
+                            foodList[0] = dataSnapshot.value as Boolean
                             food.postValue(foodList)
                         }
                         "중식" -> {
-                            foodList[1] = ds.value as Boolean
+                            foodList[1] = dataSnapshot.value as Boolean
                             food.postValue(foodList)
                         }
                         "일식" -> {
-                            foodList[2] = ds.value as Boolean
+                            foodList[2] = dataSnapshot.value as Boolean
                             food.postValue(foodList)
                         }
                         "양식" -> {
-                            foodList[3] = ds.value as Boolean
+                            foodList[3] = dataSnapshot.value as Boolean
                             food.postValue(foodList)
                         }
                         "분식" -> {
-                            foodList[4] = ds.value as Boolean
+                            foodList[4] = dataSnapshot.value as Boolean
                             food.postValue(foodList)
                         }
                     }
@@ -72,18 +70,18 @@ class SettingRepository {
         // firebase내 local 설정값 변경 적용
         ref.child("local").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for (ds in snapshot.children) {
-                    when (ds.key.toString()){
+                snapshot.children.forEach {dataSnapshot ->
+                    when (dataSnapshot.key.toString()){
                         "화전" -> {
-                            localList[0] = ds.value as Boolean
+                            localList[0] = dataSnapshot.value as Boolean
                             local.postValue(localList)
                         }
                         "홍대" -> {
-                            localList[1] = ds.value as Boolean
+                            localList[1] = dataSnapshot.value as Boolean
                             local.postValue(localList)
                         }
                         "행신" -> {
-                            localList[2] = ds.value as Boolean
+                            localList[2] = dataSnapshot.value as Boolean
                             local.postValue(localList)
                         }
                     }
@@ -94,6 +92,7 @@ class SettingRepository {
         })
     }
 
+    // viewModel 수정 -> firebase 수정
     fun modify(setting: Int, index: Int, newValue: Boolean) {
         when(setting) {
             0 -> ref.child("favorite").setValue(newValue)

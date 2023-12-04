@@ -14,7 +14,6 @@ import android.graphics.Color
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.team_project.viewmodel.AnalysisViewModel
-import com.example.team_project.viewmodel.SettingViewModel
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
@@ -24,8 +23,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import com.google.firebase.database.ktx.values
-import com.google.firebase.database.values
 
 class AnalysisFragment : Fragment() {
     private var binding: FragmentAnalysisBinding? = null
@@ -41,10 +38,9 @@ class AnalysisFragment : Fragment() {
     private var pieEntries = ArrayList<PieEntry>()
     private var pieDataSet: PieDataSet? = null
     private var pieData: PieData? = null
-    private val label = arrayOf("한식", "중식", "일식", "양식", "분식")
+    private val label = arrayOf("한식", "중식", "일식", "양식", "Fast food")
 
-    val database = Firebase.database
-    val typeRef = database.getReference("restaurant")
+    private val typeRef = Firebase.database.getReference("restaurant")
 
     val viewModel: AnalysisViewModel by activityViewModels()
 
@@ -60,27 +56,31 @@ class AnalysisFragment : Fragment() {
         binding?.recentRestaurants?.adapter = RecentAdapter(viewModel.recent)
 
         return binding?.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // pieChart에 추가할 데이터 설정
+        // recent에 변화 발생 시 호출
         viewModel.recent.observe(viewLifecycleOwner) {
+            // pieChart에 추가할 데이터 설정
             pieChart = view.findViewById(R.id.pie) // fragment_analysis.xml에서 id가 pie인 view를 가리키는 변수
             setData()
             setColor()
             setUpData()
 
+            // recycler view 갱신
             binding?.recentRestaurants?.adapter = RecentAdapter(viewModel.recent)
         }
+
         arguments?.let {
             val name = it.getString("name").toString()
             val menu = it.getString("menu").toString()
             val price = it.getString("price").toString()
+            val url = "https://firebasestorage.googleapis.com/v0/b/team-4-a91c7.appspot.com/o/${name}.png?alt=media"
+
+            // type은 firebase에 직접 접근 (음식점 메뉴 화면에 type 데이터를 갖고 있지 않음)
             typeRef.child(name).child("info").addListenerForSingleValueEvent(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val type = snapshot.child("foodtype").value.toString()
-                    val url = "https://firebasestorage.googleapis.com/v0/b/team-4-a91c7.appspot.com/o/${name}.png?alt=media"
                     viewModel.setRecent(RecentRestaurant(name, type, menu, price, url))
                     binding?.recentRestaurants?.adapter?.notifyDataSetChanged()
                 }
@@ -88,6 +88,8 @@ class AnalysisFragment : Fragment() {
                 }
             })
         }
+
+        // 분석 데이터 비우기
         binding?.resetButton?.setOnClickListener {
             viewModel.reset()
         }
@@ -97,12 +99,13 @@ class AnalysisFragment : Fragment() {
     // pieChart 설정
     fun setData() {
         pieChart?.setUsePercentValues(true) // % 로 맞춰서 계산
-        viewModel.setGraph()
-        // pieEntries 배열에 데이터 추가
 
+        viewModel.setGraph() // 그래프를 출력하기 전, 현재 viewModel 데이터 갱신
+
+        // pieEntries 배열에 데이터 추가
         pieEntries.clear() // 그래프를 비운 후 추가
         for (i in 1..5) {
-            if (viewModel.priceList[i] != 0.0f) { // 0이면 그래프에 추가 X
+            if (viewModel.priceList[i] != 0f) { // 0이면 그래프에 추가 X
                 pieEntries.add(PieEntry(viewModel.priceList[i], label[i - 1]))
             }
         }

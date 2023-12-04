@@ -5,30 +5,28 @@ import com.example.team_project.RecentRestaurant
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
 class AnalysisRepository {
-    val analysisList = ArrayList<RecentRestaurant>()
+    // 파이어 베이스 참조
+    private val ref = Firebase.database.getReference("analysis")
 
-    val database = Firebase.database
-    val ref = database.getReference("analysis")
-
+    // firebase의 변화 발생 시 viewModel의 Livedata 갱신
     fun observeAnalysis(recent: MutableLiveData<ArrayList<RecentRestaurant>>){
         ref.limitToLast(10).addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val analysisList = ArrayList<RecentRestaurant>()
-                for (ds in snapshot.children) {
-                    val name = ds.child("name").value.toString()
-                    val type = ds.child("type").value.toString()
-                    val menu = ds.child("menu").value.toString()
-                    val price = ds.child("price").value.toString()
-                    val url = ds.child("imageURL").value.toString()
+                val newAnalysisList = ArrayList<RecentRestaurant>()
+                snapshot.children.forEach { dataSnapshot ->
+                    val name = dataSnapshot.child("name").value.toString()
+                    val type = dataSnapshot.child("type").value.toString()
+                    val menu = dataSnapshot.child("menu").value.toString()
+                    val price = dataSnapshot.child("price").value.toString()
+                    val url = dataSnapshot.child("imageURL").value.toString()
                     val addData = RecentRestaurant(name, type, menu, price, url)
-                    analysisList.add(addData)
+                    newAnalysisList.add(addData)
                 }
-                recent.postValue(analysisList)
+                recent.postValue(newAnalysisList)
             }
             override fun onCancelled(error: DatabaseError) {
             }
@@ -36,16 +34,17 @@ class AnalysisRepository {
     }
 
     fun addRecent(newValue: RecentRestaurant, idx: Int){
+        // 파이어 베이스에 새로운 데이터 추가
         val idxRef = ref.child(idx.toString())
         idxRef.child("menu").setValue(newValue.menu)
         idxRef.child("name").setValue(newValue.name)
         idxRef.child("price").setValue(newValue.price)
         idxRef.child("type").setValue(newValue.type)
         idxRef.child("imageURL").setValue(newValue.url)
-        analysisList.add(newValue)
     }
 
     fun reset() {
+        // analysis 데이터 전체 삭제
         ref.removeValue()
             .addOnSuccessListener {}
             .addOnCanceledListener {}
