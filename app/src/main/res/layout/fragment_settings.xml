@@ -15,7 +15,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:checked="false"
-        android:text="배달 가능한 식당만 추천"
+        android:text="배달 식당 추천"
         android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -55,11 +55,12 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:checked="false"
-        android:text="단골집 추천 제외"
+        android:text="단골집 중 추천"
         android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/setting_text" />
 
