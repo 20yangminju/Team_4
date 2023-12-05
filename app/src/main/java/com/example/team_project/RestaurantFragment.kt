@@ -90,7 +90,6 @@ class RestaurantFragment : Fragment() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    // 에러 처리
                 }
             })
         }
@@ -108,7 +107,7 @@ class RestaurantFragment : Fragment() {
         updateFavoriteButtonColor(isFavorite)
     }
 
-    // isFavorite 값에 따라 버튼 색상 변경하는 함수
+    // isFavorite 값에 따라 버튼 색상 변경
     private fun updateFavoriteButtonColor(isFavorite: Boolean) {
         val button = binding?.favButton
         button?.post {
@@ -120,7 +119,6 @@ class RestaurantFragment : Fragment() {
         }
     }
 
-    // 데이터를 읽어오는 함수
     fun readData(restaurantKey: String?) {
         if (restaurantKey != null) {
             databaseReference = FirebaseDatabase.getInstance().getReference("restaurant")
@@ -164,7 +162,6 @@ class RestaurantFragment : Fragment() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    // 에러 처리
                 }
             })
         }

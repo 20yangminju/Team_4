@@ -33,7 +33,7 @@ class MenuFragment : Fragment() {
 
     val menus = ArrayList<Menu>()
 
-    private var _binding : FragmentMenuBinding? = null
+    private var _binding : FragmentMenuBinding? = null //recycler view 바인딩
     private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +59,7 @@ class MenuFragment : Fragment() {
         return view
     }
 
-    fun readData(menukey: String?){
+    fun readData(menukey: String?){ //firebase에서 메뉴 데이터
         if (menukey != null) {
             databaseReference = FirebaseDatabase.getInstance().getReference("restaurant")
             databaseReference.child(menukey).child("menu").addListenerForSingleValueEvent(object : ValueEventListener {
@@ -81,7 +81,6 @@ class MenuFragment : Fragment() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
                 }
         })
     }
