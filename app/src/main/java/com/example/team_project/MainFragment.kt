@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.team_project.databinding.FragmentMainBinding
@@ -14,6 +15,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.values
 
@@ -27,6 +29,7 @@ class MainFragment : Fragment() {
     var binding: FragmentMainBinding? = null
     private lateinit var databaseReference: DatabaseReference
     private val viewModel: SettingViewModel by activityViewModels()
+    private var searchView :SearchView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +43,13 @@ class MainFragment : Fragment() {
         binding = FragmentMainBinding.inflate(inflater)
         databaseReference = FirebaseDatabase.getInstance().getReference("restaurant")
 
-
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        searchView = binding?.searchView
+
+
 
 
 
@@ -74,15 +79,10 @@ class MainFragment : Fragment() {
                                     key == "Error"
                                     )
                             }
-
-
-
-
                             val randomKey = filteredKeys.randomOrNull() ?: "Error"
                             val bundle = Bundle()
                             bundle.putString("key", randomKey)
                             findNavController().navigate(R.id.action_mainFragment_to_restaurantFragment, bundle)
-
                     }
 
                     override fun onCancelled(error: DatabaseError) {
@@ -90,6 +90,20 @@ class MainFragment : Fragment() {
                     }
                 })
             }
+
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?) : Boolean{
+
+                val bundle = Bundle()
+                bundle.putString("key", query)
+                findNavController().navigate(R.id.action_mainFragment_to_restaurantFragment, bundle)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        })
 
         binding?.imageButton?.setOnClickListener {
             // imageButton 버튼이 눌리면 MainFragment -> SettingFragment로 화면 전환
