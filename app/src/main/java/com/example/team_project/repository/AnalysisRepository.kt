@@ -26,6 +26,7 @@ class AnalysisRepository {
                     val addData = RecentRestaurant(name, type, menu, price, url)
                     newAnalysisList.add(addData)
                 }
+                newAnalysisList.reverse() // 새로 추가한 메뉴가 맨 위에 오도록 뒤집기
                 recent.postValue(newAnalysisList)
             }
             override fun onCancelled(error: DatabaseError) {
