@@ -1,23 +1,24 @@
 package com.example.team_project
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.team_project.databinding.FragmentMainBinding
 import com.example.team_project.viewmodel.SettingViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.values
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -30,6 +31,11 @@ class MainFragment : Fragment() {
     private lateinit var databaseReference: DatabaseReference
     private val viewModel: SettingViewModel by activityViewModels()
     private var searchView :SearchView? = null
+
+    private lateinit var searchResultsRecyclerView: RecyclerView
+    private lateinit var searchResultsAdapter: SearchResultsAdapter
+    private val searchResultsList = mutableListOf<SearchResultItem>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +55,10 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         searchView = binding?.searchView
 
+        searchResultsRecyclerView =binding?.searchRecyclerView ?: return
+        searchResultsAdapter = SearchResultsAdapter(searchResultsList, this)
+        searchResultsRecyclerView.adapter = searchResultsAdapter
+        searchResultsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 
 
@@ -101,9 +111,39 @@ class MainFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                databaseReference.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (newText.isNullOrBlank()) {
+                            searchResultsList.clear()
+                            updateSearchResults(searchResultsList)
+
+                        } else {
+                            searchResultsList.clear()
+                            for (child in snapshot.children) {
+                                val rastaurantName = child.key.toString()
+                                rastaurantName?.let {
+                                    if (it.contains(newText, ignoreCase = true)) {
+                                        val searchResultItem = SearchResultItem(it)
+                                        searchResultsList.add(searchResultItem)
+                                    }
+                                }
+                            }
+                            updateSearchResults(searchResultsList)
+                        }
+                    }
+
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+                })
                 return true
             }
+
         })
+
+
+
 
         binding?.imageButton?.setOnClickListener {
             // imageButton 버튼이 눌리면 MainFragment -> SettingFragment로 화면 전환
@@ -115,7 +155,13 @@ class MainFragment : Fragment() {
         binding?.imageButton3?.setOnClickListener{
             findNavController().navigate(R.id.action_mainFragment_to_analysisFragment)
         }
-
     }
+
+    private fun updateSearchResults(results: List<SearchResultItem>){
+        searchResultsAdapter.notifyDataSetChanged()
+
+        searchResultsRecyclerView.visibility = if(results.isNotEmpty()) View.VISIBLE else View.GONE
+    }
+
 
 }

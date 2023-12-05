@@ -9,6 +9,7 @@
     tools:context=".MainActivity">
 
 
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"
@@ -39,44 +40,50 @@
             <ImageButton
                 android:id="@+id/imageButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:contentDescription="환경설정"
-                android:src="@android:drawable/btn_star" />
+                android:src="@drawable/setting_image_size" />
 
 
             <ImageButton
                 android:id="@+id/imageButton2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
                 android:contentDescription="단골집"
-                android:src="@android:drawable/btn_star" />
+                android:src="@android:drawable/btn_star_big_on" />
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/RandomGet"
+            android:layout_width="400dp"
+            android:layout_height="400dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/shape_for_circle_button"
+            android:gravity="center"
+            android:text="RANDOM"
+            android:textColor="#03A9F4"
+            tools:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:contentDescription="소비분석화면"
+            android:src="@drawable/graph_image" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
     </LinearLayout>
-
-    <Button
-        android:id="@+id/RandomGet"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_gravity="center"
-        android:background="@drawable/shape_for_circle_button"
-        android:gravity="center"
-        android:text="RANDOM"
-        android:textColor="#03A9F4"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout2"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout2"
-        tools:textStyle="bold" />
-
-    <ImageButton
-        android:id="@+id/imageButton3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="소비분석화면"
-        android:src="@android:drawable/btn_star"
-        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
