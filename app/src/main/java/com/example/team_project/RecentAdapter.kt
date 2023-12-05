@@ -27,8 +27,16 @@ class RecentAdapter(private val recentRestaurants: LiveData<ArrayList<RecentRest
         fun bind(recentRestaurant: RecentRestaurant) {
             binding.txtMenuValue.text = recentRestaurant.menu
             binding.txtNameValue.text = recentRestaurant.name
-            binding.txtPriceValue.text = recentRestaurant.price
-            binding.txtTypeValue.text = recentRestaurant.type
+            binding.txtPriceValue.text = "${recentRestaurant.price}원"
+            binding.txtTypeValue.text = when (recentRestaurant.type) {
+                "korean" -> "한식"
+                "chinese" -> "중식"
+                "japanese" -> "일식"
+                "western" -> "양식"
+                "fastfood" -> "Fast food"
+                else -> "기타"
+            }
+
             // URL을 통해 imageView에 image 업로드
             Glide.with(binding.imageView.context).load(recentRestaurant.url).into(binding.imageView)
         }
