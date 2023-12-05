@@ -28,12 +28,14 @@
         android:id="@+id/fast_food_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="64dp"
         android:layout_marginTop="16dp"
         android:checked="true"
-        android:text="Fastfood"
-        app:layout_constraintStart_toEndOf="@+id/western_food_checkbox"
-        app:layout_constraintTop_toBottomOf="@+id/food_type_text" />
+        android:drawableStart="@drawable/fast_food_image"
+        android:text="  Fastfood"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/chinese_food_checkbox"
+        app:layout_constraintTop_toBottomOf="@+id/western_food_checkbox" />
 
     <TextView
         android:id="@+id/setting_text"
@@ -74,6 +76,7 @@
         android:layout_marginTop="16dp"
         android:checked="true"
         android:text="화전"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/local_setting_text" />
 
@@ -85,6 +88,7 @@
         android:layout_marginTop="16dp"
         android:checked="true"
         android:text="홍대"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/hwajeon_checkbox"
         app:layout_constraintTop_toBottomOf="@+id/local_setting_text" />
 
@@ -96,6 +100,7 @@
         android:layout_marginTop="16dp"
         android:checked="true"
         android:text="행신"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/hongdae_checkbox"
         app:layout_constraintTop_toBottomOf="@+id/local_setting_text" />
 
@@ -103,10 +108,12 @@
         android:id="@+id/korean_food_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:checked="true"
-        android:text="한식"
+        android:drawableStart="@drawable/korean_food_image"
+        android:text="  한식"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/food_type_text" />
 
@@ -114,34 +121,40 @@
         android:id="@+id/chinese_food_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:checked="true"
-        android:text="중식"
-        app:layout_constraintStart_toEndOf="@+id/korean_food_checkbox"
-        app:layout_constraintTop_toBottomOf="@+id/food_type_text" />
+        android:drawableStart="@drawable/chinese_food_image"
+        android:text="  중식"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/korean_food_checkbox" />
 
     <CheckBox
         android:id="@+id/western_food_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="64dp"
         android:layout_marginTop="16dp"
         android:checked="true"
-        android:text="양식"
-        app:layout_constraintStart_toEndOf="@+id/japanese_food_checkbox"
+        android:drawableStart="@drawable/western_food_image"
+        android:text="  양식"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/korean_food_checkbox"
         app:layout_constraintTop_toBottomOf="@+id/food_type_text" />
 
     <CheckBox
         android:id="@+id/japanese_food_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:checked="true"
-        android:text="일식"
-        app:layout_constraintStart_toEndOf="@+id/chinese_food_checkbox"
-        app:layout_constraintTop_toBottomOf="@+id/food_type_text" />
+        android:drawableStart="@drawable/japanese_food_image"
+        android:text="  일식"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chinese_food_checkbox" />
 
     <TextView
         android:id="@+id/local_setting_text"
