@@ -26,9 +26,9 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MenuFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MenuFragment : Fragment() {
+class MenuFragment : Fragment() {//파이어베이스에서 레스토랑 메뉴를 읽어서 리사이클러뷰로 표현
 
-    private var receivedString: String? = null
+    private var receivedString: String? = null //프래그먼트 전달 레스토랑 키
     private lateinit var databaseReference: DatabaseReference
 
     val menus = ArrayList<Menu>()
@@ -73,10 +73,10 @@ class MenuFragment : Fragment() {
                         val menu = Menu(name, price ?: "", imageUrl)
                         menus.add(menu)
 
-                    }
+                    }//정보 읽어 Menu 객체 생성 후 리스트 추가
 
                     val menusAdapter = MenusAdapter(menus, this@MenuFragment, menukey)
-                    binding.recMenus.adapter = menusAdapter
+                    binding.recMenus.adapter = menusAdapter//어댑터 사용으로 리사이클러뷰
                 }
 
                 override fun onCancelled(error: DatabaseError) {

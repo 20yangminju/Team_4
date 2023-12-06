@@ -41,7 +41,7 @@ class RestaurantFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("Lifecycle", "onViewCreated() called")
 
-        binding?.favButton?.setOnClickListener {
+        binding?.favButton?.setOnClickListener {//별 버튼 클릭 시 isfavorite상태 변경 및 색상 변경
             receivedString?.let { restaurantKey ->
                 val isFavoriteRef =
                     FirebaseDatabase.getInstance().getReference("restaurant").child(restaurantKey)
@@ -93,7 +93,7 @@ class RestaurantFragment : Fragment() {
                 }
             })
         }
-        binding?.menuButton?.setOnClickListener {
+        binding?.menuButton?.setOnClickListener {//메뉴 프래그먼트로 이동
             val bundle = Bundle()
             val myString = receivedString
             bundle.putString("key", myString)
@@ -107,7 +107,7 @@ class RestaurantFragment : Fragment() {
         updateFavoriteButtonColor(isFavorite)
     }
 
-    private fun updateFavoriteButtonColor(isFavorite: Boolean) {
+    private fun updateFavoriteButtonColor(isFavorite: Boolean) {//isfavorite상태 확인 후 버튼 색상 업데이트
         val button = binding?.favButton
         button?.post {
             val colorResId =
@@ -122,7 +122,7 @@ class RestaurantFragment : Fragment() {
         if (restaurantKey != null) {
             databaseReference = FirebaseDatabase.getInstance().getReference("restaurant")
             databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+                override fun onDataChange(snapshot: DataSnapshot) {//파이어베이스에서 레스토랑 정보 읽어와 업데이트
                     val restaurantInfo = snapshot.child(restaurantKey).child("info")
 
                     val restaurantName = restaurantKey

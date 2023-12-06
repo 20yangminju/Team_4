@@ -22,7 +22,7 @@ import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
 import java.net.URLEncoder
 
-class MenusAdapter(
+class MenusAdapter(//리사이클러뷰에 메뉴 표현 어댑터
     val menus: ArrayList<Menu>,
     val fragment: Fragment,
     val restaurant: String
@@ -51,7 +51,7 @@ class MenusAdapter(
 
             val menuRef = myRef.child(restaurant).child("menu").child(menu.name)
             menuRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {//파이어베이스에서 url 읽어와 피카소로 구현
                     val imageUrl = dataSnapshot.child("imageUrl").getValue(String::class.java)
                     if (imageUrl != null && imageUrl.isNotEmpty()) {
                         Log.d("MenuAdapter", "Image URL: $imageUrl")
@@ -66,7 +66,7 @@ class MenusAdapter(
                 }
             })
 
-            binding.Buy.setOnClickListener{
+            binding.Buy.setOnClickListener{//메뉴 정보를 분석으로 전달, 이동
                 val bundle = Bundle()
                 bundle.putString("name", restaurant)
                 bundle.putString("price", menu.price)
