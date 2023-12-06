@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import android.widget.Toast
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -102,42 +103,38 @@ class MainFragment : Fragment() {
             }
 
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
             override fun onQueryTextSubmit(query: String?) : Boolean{
+                val processedQuery = query?.trim()?.replace("\\s".toRegex(), "")
+                if (!processedQuery.isNullOrBlank()) {
+                    databaseReference.addListenerForSingleValueEvent(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (!snapshot.hasChild(processedQuery)) {
+                                showToast("검색 결과가 없습니다.")
+                            } else {
+                                val bundle = Bundle()
+                                bundle.putString("key", processedQuery)
+                                if (findNavController().currentDestination?.id == R.id.mainFragment) {
+                                    findNavController().navigate(R.id.action_mainFragment_to_restaurantFragment, bundle)
+                                }
+                                }
+                        }
 
-                val bundle = Bundle()
-                bundle.putString("key", query)
-                findNavController().navigate(R.id.action_mainFragment_to_restaurantFragment, bundle)
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+                    })
+                } else {
+                    showToast("검색어를 입력해주세요.")
+                }
                 return true
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                databaseReference.addListenerForSingleValueEvent(object : ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (newText.isNullOrBlank()) {
-                            searchResultsList.clear()
-                            updateSearchResults(searchResultsList)
-
-                        } else {
-                            searchResultsList.clear()
-                            for (child in snapshot.children) {
-                                val rastaurantName = child.key.toString()
-                                rastaurantName?.let {
-                                    if (it.contains(newText, ignoreCase = true)) {
-                                        val searchResultItem = SearchResultItem(it)
-                                        searchResultsList.add(searchResultItem)
-                                    }
-                                }
-                            }
-                            updateSearchResults(searchResultsList)
-                        }
-                    }
-
-
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-                })
-                return true
+            private fun showToast(message: String) {
+                val toast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
+                toast.show()
             }
 
         })
