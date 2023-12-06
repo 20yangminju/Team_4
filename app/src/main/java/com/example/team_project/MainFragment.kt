@@ -104,6 +104,30 @@ class MainFragment : Fragment() {
 
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextChange(newText: String?): Boolean {
+                databaseReference.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (newText.isNullOrBlank()) {
+                            searchResultsList.clear()
+                            updateSearchResults(searchResultsList)
+
+                        } else {
+                            searchResultsList.clear()
+                            for (child in snapshot.children) {
+                                val rastaurantName = child.key.toString()
+                                rastaurantName?.let {
+                                    if (it.contains(newText, ignoreCase = true)) {
+                                        val searchResultItem = SearchResultItem(it)
+                                        searchResultsList.add(searchResultItem)
+                                    }
+                                }
+                            }
+                            updateSearchResults(searchResultsList)
+                        }
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+                })
                 return true
             }
             override fun onQueryTextSubmit(query: String?) : Boolean{
@@ -156,7 +180,6 @@ class MainFragment : Fragment() {
 
     private fun updateSearchResults(results: List<SearchResultItem>){
         searchResultsAdapter.notifyDataSetChanged()
-
         searchResultsRecyclerView.visibility = if(results.isNotEmpty()) View.VISIBLE else View.GONE
     }
 
