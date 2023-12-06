@@ -85,7 +85,7 @@ class RestaurantFragment : Fragment() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     isFavorite = snapshot.getValue(Boolean::class.java) ?: false
                     Log.d("Firebase", "Fetched isFavorite: $isFavorite")
-                    // isFavorite 값에 따라 버튼 색상 변경
+                    // 노란 별 isfavorite 값
                     updateFavoriteButtonColor(isFavorite)
                 }
 
@@ -103,11 +103,10 @@ class RestaurantFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // 프래그먼트가 다시 화면에 나타날 때 버튼 색상 업데이트
+        // 별 색상 업데이트
         updateFavoriteButtonColor(isFavorite)
     }
 
-    // isFavorite 값에 따라 버튼 색상 변경
     private fun updateFavoriteButtonColor(isFavorite: Boolean) {
         val button = binding?.favButton
         button?.post {
