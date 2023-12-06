@@ -21,7 +21,7 @@ class AnalysisViewModel : ViewModel() {
 
     fun reset() {
         _recent.value = ArrayList()
-        //_priceList = arrayListOf(0f, 0f ,0f ,0f ,0f, 0f)
+        _priceList = arrayListOf(0f, 0f ,0f ,0f ,0f, 0f)
         repository.reset()
     }
 
